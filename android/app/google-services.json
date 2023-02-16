@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "71179252973",
+    "firebase_url": "https://smartbuildings-2a954-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smartbuildings-2a954",
+    "storage_bucket": "smartbuildings-2a954.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71179252973:android:288068dd779989856a88e4",
+        "android_client_info": {
+          "package_name": "com.example.smartbuilding"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71179252973-jgavpnkls5bofgq26it8ucefig103eev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKNxEe5kRX_clp6vZoK7SiWRCwIciG-Ks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71179252973-jgavpnkls5bofgq26it8ucefig103eev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
