@@ -28,8 +28,6 @@ class _TabRumahState extends State<TabRumah> {
     ['Energy', 'lib/icons/energy.png', '0 kWh'],
   ];
 
-  final List _powerSensorData = [];
-
   @override
   Widget build(BuildContext context) {
     // GET DATA SENSORS

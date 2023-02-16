@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -166,8 +168,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const Divider(
-                thickness: 2,
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Divider(
+                  thickness: 2,
+                ),
               ),
 
               const Padding(
@@ -201,7 +206,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Expanded(
                 child: TabBarView(children: [
-                  TabRumah(),
+                  const TabRumah(),
                   TabSalmon(),
                   const TabTik(),
                   const TabUtama(),
