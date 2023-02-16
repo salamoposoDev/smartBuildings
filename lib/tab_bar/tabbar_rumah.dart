@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:smartbuilding/component/monitor.dart';
@@ -15,10 +14,6 @@ class TabRumah extends StatefulWidget {
 class _TabRumahState extends State<TabRumah> {
   final String pathRumah = 'buildings/rumah';
   var realtimeData;
-  String voltageValue = '0';
-  String currentValue = '0';
-  String powerValue = '0';
-  String energyValue = '0';
 
   List sensorComponent = [
     // sensorName, SensorIcon, SensorValue
@@ -46,6 +41,7 @@ class _TabRumahState extends State<TabRumah> {
             String stringData = jsonEncode(snap.data?.snapshot.value);
             EnergyModel energyModel =
                 EnergyModel.fromJson(json.decode(stringData));
+
             // Sensor Value From database
             List<String> powerRumahValue = [
               '${energyModel.voltage} V',
@@ -53,10 +49,6 @@ class _TabRumahState extends State<TabRumah> {
               '${energyModel.power} w',
               '${energyModel.energy} kWh',
             ];
-
-            // parsing data
-
-            // print(dataPowerRumah);
             return GridView.builder(
                 itemCount: sensorComponent.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -140,14 +141,6 @@ class _HomePageState extends State<HomePage> {
                     child: Text(
                       'Energy Monitoring',
                       style: GoogleFonts.bebasNeue(fontSize: 42),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15.0),
-                    child: Image.asset(
-                      'lib/icons/smartbuilding.png',
-                      color: Colors.grey[800],
-                      height: 60,
                     ),
                   ),
                 ],
