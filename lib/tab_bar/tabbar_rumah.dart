@@ -1,14 +1,12 @@
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:smartbuilding/component/monitor.dart';
 import 'package:smartbuilding/model/energy.dart';
 
 class TabRumah extends StatefulWidget {
-  TabRumah({super.key});
+  const TabRumah({super.key});
 
   @override
   State<TabRumah> createState() => _TabRumahState();
@@ -30,7 +28,7 @@ class _TabRumahState extends State<TabRumah> {
     ['Energy', 'lib/icons/energy.png', '0 kWh'],
   ];
 
-  List _powerSensorData = [];
+  final List _powerSensorData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +38,6 @@ class _TabRumahState extends State<TabRumah> {
     powerSensors.onValue.listen((event) {
       realtimeData = event.snapshot.value;
       final parse = jsonEncode(realtimeData);
-      log(parse);
     });
     return StreamBuilder(
         stream: powerSensors.onValue,
@@ -48,20 +45,15 @@ class _TabRumahState extends State<TabRumah> {
           if (snap.hasData &&
               !snap.hasError &&
               snap.data?.snapshot.value != null) {
-            // EnergyModel welcomeFromJson(String str) =>
-            //     EnergyModel.fromJson(json.decode(str));
-            // final welcome =
-            //     welcomeFromJson(snap.data!.snapshot.value!.toString());
-            // log("${welcome.cosphi.toString()} ok");
-            // log("${welcome.cosphi.toString()} siap");
-
-            EnergyModel energyModel = EnergyModel();
+            String stringData = jsonEncode(snap.data?.snapshot.value);
+            EnergyModel energyModel =
+                EnergyModel.fromJson(json.decode(stringData));
             // Sensor Value From database
             List<String> powerRumahValue = [
               '${energyModel.voltage} V',
-              '${energyModel.voltage} A',
-              '${energyModel.voltage} w',
-              '${energyModel.voltage} kWh',
+              '${energyModel.current} A',
+              '${energyModel.power} w',
+              '${energyModel.energy} kWh',
             ];
 
             // parsing data

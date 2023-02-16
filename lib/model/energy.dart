@@ -1,9 +1,5 @@
 class EnergyModel {
-  int? power;
-  int? cosphi;
-  int? current;
-  int? voltage;
-  int? energy;
+  int? power, cosphi, current, voltage, energy;
 
   EnergyModel({
     this.power,

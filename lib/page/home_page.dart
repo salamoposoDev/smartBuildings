@@ -1,12 +1,7 @@
-import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:smartbuilding/component/monitor.dart';
 import 'package:smartbuilding/tab_bar/tabbar_cakalang.dart';
 import 'package:smartbuilding/tab_bar/tabbar_kakap.dart';
 import 'package:smartbuilding/tab_bar/tabbar_rumah.dart';
@@ -24,19 +19,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    var timestamp;
-    var waktu;
+    int timestamp;
+    String? waktu;
     // firebase ref
     DatabaseReference timestampRef =
         FirebaseDatabase.instance.ref('buildings/rumah/sensors/').child('time');
     timestampRef.onValue.listen((event) {
-      timestamp = event.snapshot.value;
-      print(timestamp);
-      var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-      print(date.toString());
+      timestamp = event.snapshot.value as int;
+
+      var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 
       waktu = DateFormat('HH:mm:ss').format(date);
-      print(waktu);
     });
 
     return DefaultTabController(
@@ -97,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Row(
                             children: [
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(right: 8.0),
                                 child: Icon(
                                   Icons.cloud,
@@ -105,8 +98,8 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.black,
                                 ),
                               ),
-                              Text(waktu.toString(),
-                                  style: TextStyle(
+                              Text(waktu ?? '-',
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.black87,
                                   )),
@@ -173,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              Divider(
+              const Divider(
                 thickness: 2,
               ),
 
