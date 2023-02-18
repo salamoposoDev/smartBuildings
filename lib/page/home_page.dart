@@ -20,19 +20,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int timestamp = 0;
+  var jam;
+  var dayWeek;
+  String welcome = '';
+  String hour = 'null';
+
   @override
   Widget build(BuildContext context) {
-    int timestamp;
-    String? waktu;
-    // firebase ref
+    // DATE TIME
+    final DateTime now = DateTime.now();
+    final DateFormat dateFormat = DateFormat.H();
+    hour = dateFormat.format(now);
+    var intHour = int.parse(hour);
+    if (intHour > 00 && intHour < 11) {
+      welcome = 'Selamat Pagi';
+    } else if (intHour > 10 && intHour < 15) {
+      welcome = 'Selamat Siang';
+    } else if (intHour > 14 && intHour < 19) {
+      welcome = 'Selamat Sore';
+    } else if (intHour > 18 && intHour < 00) {
+      welcome = 'Selamat Siang';
+    }
+
+    // firebase Timestamp
     DatabaseReference timestampRef =
         FirebaseDatabase.instance.ref('buildings/rumah/sensors/').child('time');
     timestampRef.onValue.listen((event) {
-      timestamp = event.snapshot.value as int;
+      setState(() {
+        timestamp = event.snapshot.value as int;
+      });
 
       var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 
-      waktu = DateFormat('HH:mm:ss').format(date);
+      jam = DateFormat.jms().format(date);
+      dayWeek = DateFormat.yMMMMd().format(date);
     });
 
     return DefaultTabController(
@@ -101,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.black,
                                 ),
                               ),
-                              Text(waktu ?? '-',
+                              Text(jam ?? 'null',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.black87,
@@ -120,10 +142,10 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // WELCOME TEXT
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 15.0),
                 child: Text(
-                  'Welcome Back,',
+                  welcome,
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black54,

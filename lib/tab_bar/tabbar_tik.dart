@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:smartbuilding/component/monitor.dart';
-import 'package:smartbuilding/model/energy.dart';
 import 'package:smartbuilding/model/tik_model.dart';
 
 class TabTik extends StatefulWidget {
@@ -68,7 +65,17 @@ class _TabTikState extends State<TabTik> {
                 );
               });
         } else {
-          return Text("data");
+          return GridView.builder(
+              itemCount: sensorComponent.length,
+              gridDelegate:
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              itemBuilder: (context, index) {
+                return Monitor(
+                  sensorName: sensorComponent[index][0],
+                  sensorIcon: sensorComponent[index][1],
+                  sensorValue: sensorComponent[index][2],
+                );
+              });
         }
       },
     );
