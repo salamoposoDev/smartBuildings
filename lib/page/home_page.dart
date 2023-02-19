@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:smartbuilding/component/sensors_card_status.dart';
 import 'package:smartbuilding/tab_bar/tabbar_cakalang.dart';
 import 'package:smartbuilding/tab_bar/tabbar_kakap.dart';
 import 'package:smartbuilding/tab_bar/tabbar_rumah.dart';
@@ -25,6 +23,17 @@ class _HomePageState extends State<HomePage> {
   var dayWeek;
   String welcome = '';
   String hour = 'null';
+  String statSensor = 'Disconnected';
+
+  List statusCard = [
+    // building, hardwareState, SensorState
+    ['Rumah', 'Online', 'Connected'],
+    ['Salmon', 'Offline', 'Disconnected'],
+    ['TIK', 'Offline', 'Disconnected'],
+    ['Utama', 'Offline', 'Disconnected'],
+    ['Kakap', 'Offline', 'Disconnected'],
+    ['Cakalang', 'Offline', 'Disconnected'],
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     } else if (intHour > 14 && intHour < 19) {
       welcome = 'Selamat Sore';
     } else if (intHour > 18 && intHour < 00) {
-      welcome = 'Selamat Siang';
+      welcome = 'Selamat Malam';
     }
 
     // firebase Timestamp
@@ -56,6 +65,19 @@ class _HomePageState extends State<HomePage> {
       jam = DateFormat.jms().format(date);
       dayWeek = DateFormat.yMMMMd().format(date);
     });
+
+    DatabaseReference ref_statusSensor =
+        FirebaseDatabase.instance.ref('buildings/rumah/sensors/sensorState');
+    ref_statusSensor.onValue.listen(
+      (event) {
+        int stat = event.snapshot.value as int;
+        if (stat == 1) {
+          statSensor = 'Connected';
+        } else {
+          statSensor = 'Disconnected';
+        }
+      },
+    );
 
     return DefaultTabController(
       length: 6,
@@ -138,7 +160,7 @@ class _HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(
-                height: 40,
+                height: 10,
               ),
 
               // WELCOME TEXT
@@ -168,8 +190,29 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
 
+              // CARD STATUS SENSOR
+              SizedBox(
+                height: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: statusCard.length,
+                      itemBuilder: (context, index) {
+                        return SensorsCardStatus(
+                          buildingsName: statusCard[index][0],
+                          hardwareState: statusCard[index][1],
+                          sensorState: statSensor,
+                          todayEnergy: '200',
+                          thisMonthEnergy: '1200',
+                          lastUpdate: jam ?? 'null',
+                        );
+                      }),
+                ),
+              ),
+
               const SizedBox(
-                height: 70,
+                height: 10,
               ),
 
               const Padding(
