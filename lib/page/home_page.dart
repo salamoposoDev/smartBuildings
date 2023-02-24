@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smartbuilding/component/sensors_card_status.dart';
+import 'package:smartbuilding/model/status_sensors.dart';
 import 'package:smartbuilding/tab_bar/tabbar_cakalang.dart';
 import 'package:smartbuilding/tab_bar/tabbar_kakap.dart';
 import 'package:smartbuilding/tab_bar/tabbar_rumah.dart';
@@ -23,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   String? dayWeek;
   String welcome = '';
   String hour = 'null';
+  String dateNow = 'null';
   String statSensor = 'Disconnected';
   var prevTimeUp;
 
@@ -42,6 +46,7 @@ class _HomePageState extends State<HomePage> {
     final DateTime now = DateTime.now();
     final DateFormat dateFormat = DateFormat.H();
     hour = dateFormat.format(now);
+    dateNow = DateFormat.yMMMd().format(now);
     var intHour = int.parse(hour);
     if (intHour >= 00 && intHour <= 10) {
       welcome = 'Selamat Pagi';
@@ -53,22 +58,22 @@ class _HomePageState extends State<HomePage> {
       welcome = 'Selamat Malam';
     }
 
+    // DATABASE REF STATUS SENSOR
+
+    DatabaseReference statusHardwareRef =
+        FirebaseDatabase.instance.ref('buildingStat');
+
     // firebase Timestamp
     DatabaseReference timestampRef =
         FirebaseDatabase.instance.ref('buildings/rumah/sensors/').child('time');
     timestampRef.onValue.listen((event) {
-      if (event.snapshot.exists) {
-        setState(() {
-          timestamp = event.snapshot.value as int;
-          var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+      setState(() {
+        timestamp = event.snapshot.value as int;
+        var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 
-          jam = DateFormat.Hm().format(date).toString();
-          dayWeek = DateFormat.yMd().format(date).toString();
-        });
-      } else {
-        jam = '-';
-        dayWeek = '-';
-      }
+        jam = DateFormat.Hm().format(date).toString();
+        dayWeek = DateFormat.yMd().format(date).toString();
+      });
     });
 
     DatabaseReference ref_statusSensor =
@@ -150,9 +155,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Text(
-                                jam ?? 'null',
+                                dateNow,
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   color: Colors.black87,
                                 ),
                               ),
@@ -197,25 +202,118 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // CARD STATUS SENSOR
-              SizedBox(
-                height: 170,
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: statusCard.length,
-                      itemBuilder: (context, index) {
-                        return SensorsCardStatus(
-                          buildingsName: statusCard[index][0],
-                          hardwareState: statusCard[index][1],
-                          sensorState: statSensor,
-                          todayEnergy: '200',
-                          thisMonthEnergy: '1200',
-                          lastUpdate: '$jam, $dayWeek',
-                        );
-                      }),
-                ),
-              ),
+
+              StreamBuilder(
+                  stream: statusHardwareRef.onValue,
+                  builder: (context, snap) {
+                    if (snap.hasData &&
+                        !snap.hasError &&
+                        snap.data?.snapshot.value != null) {
+                      String stringData = jsonEncode(snap.data?.snapshot.value);
+                      SensorStatus sensorStatus =
+                          SensorStatus.fromJson(json.decode(stringData));
+
+                      // timestamp Home
+                      var timeH = DateTime.fromMillisecondsSinceEpoch(
+                          sensorStatus.hTime! * 1000);
+                      String hJam = DateFormat.Hm().format(timeH).toString();
+                      String hDate = DateFormat.yMd().format(timeH).toString();
+
+                      // timestamp B1
+                      var timeB1 = DateTime.fromMillisecondsSinceEpoch(
+                          sensorStatus.b1Time! * 1000);
+                      String b1Jam = DateFormat.Hm().format(timeB1).toString();
+                      String b1Date =
+                          DateFormat.yMd().format(timeB1).toString();
+
+                      // timestamp B2
+                      var timeB2 = DateTime.fromMillisecondsSinceEpoch(
+                          sensorStatus.b2Time! * 1000);
+                      String b2Jam = DateFormat.Hm().format(timeB2).toString();
+                      String b2Date =
+                          DateFormat.yMd().format(timeB2).toString();
+
+                      // timestamp B3
+                      var timeB3 = DateTime.fromMillisecondsSinceEpoch(
+                          sensorStatus.b3Time! * 1000);
+                      String b3Jam = DateFormat.Hm().format(timeB3).toString();
+                      String b3Date =
+                          DateFormat.yMd().format(timeB3).toString();
+
+                      // timestamp B4
+                      var timeB4 = DateTime.fromMillisecondsSinceEpoch(
+                          sensorStatus.b4Time! * 1000);
+                      String b4Jam = DateFormat.Hm().format(timeB4).toString();
+                      String b4Date =
+                          DateFormat.yMd().format(timeB4).toString();
+
+                      // timestamp B5
+                      var timeB5 = DateTime.fromMillisecondsSinceEpoch(
+                          sensorStatus.b5Time! * 1000);
+                      String b5Jam = DateFormat.Hm().format(timeB5).toString();
+                      String b5Date =
+                          DateFormat.yMd().format(timeB5).toString();
+
+                      List<String> sensorStatList = [
+                        '$hJam, $hDate',
+                        '$b1Jam, $b1Date',
+                        '$b2Jam, $b2Date',
+                        '$b3Jam, $b3Date',
+                        '$b3Jam, $b3Date',
+                        '$b3Jam, $b3Date',
+                      ];
+
+                      List<String> pzemStatList = [
+                        '${sensorStatus.hSens}',
+                        '${sensorStatus.b1Sens}',
+                        '${sensorStatus.b2Sens}',
+                        '${sensorStatus.b3Sens}',
+                        '${sensorStatus.b4Sens}',
+                        '${sensorStatus.b5Sens}',
+                      ];
+
+                      return SizedBox(
+                        height: 170,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: statusCard.length,
+                              itemBuilder: (context, index) {
+                                return SensorsCardStatus(
+                                  buildingsName: 'Device',
+                                  hardwareState: statusCard[index][0],
+                                  sensorState: pzemStatList[index],
+                                  todayEnergy: '200',
+                                  thisMonthEnergy: '1200',
+                                  lastUpdate: sensorStatList[index],
+                                );
+                              }),
+                        ),
+                      );
+                    } else {
+                      return Text('salamoposo');
+                    }
+                  }),
+              // SizedBox(
+              //   height: 170,
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(5.0),
+              //     child: ListView.builder(
+              //         scrollDirection: Axis.horizontal,
+              //         itemCount: statusCard.length,
+              //         itemBuilder: (context, index) {
+              //           return SensorsCardStatus(
+              //             buildingsName: statusCard[index][0],
+              //             hardwareState: statusCard[index][1],
+              //             sensorState: statSensor,
+              //             todayEnergy: '200',
+              //             thisMonthEnergy: '1200',
+              //             lastUpdate: '$jam, $dayWeek',
+              //           );
+              //         }),
+              //   ),
+              // ),
 
               const SizedBox(
                 height: 10,
