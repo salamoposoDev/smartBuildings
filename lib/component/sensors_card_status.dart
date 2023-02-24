@@ -39,10 +39,10 @@ class SensorsCardStatus extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         'Last Update',
                         style: TextStyle(
                           color: Colors.white70,
@@ -51,7 +51,7 @@ class SensorsCardStatus extends StatelessWidget {
                       ),
                       Text(
                         lastUpdate,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 14,
                         ),
@@ -65,14 +65,14 @@ class SensorsCardStatus extends StatelessWidget {
                         children: [
                           Text(
                             '$buildingsName | ',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
                             ),
                           ),
                           Text(
                             hardwareState,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
                             ),
@@ -81,8 +81,8 @@ class SensorsCardStatus extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Text(
-                            'Status : ',
+                          const Text(
+                            'Sensor : ',
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -90,7 +90,7 @@ class SensorsCardStatus extends StatelessWidget {
                           ),
                           Text(
                             sensorState,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
                             ),

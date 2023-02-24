@@ -1,5 +1,6 @@
 class EnergyModel {
   int? voltage;
+  // ignore: prefer_typing_uninitialized_variables
   var current, power, energy, cosphi;
 
   EnergyModel({

@@ -19,15 +19,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int timestamp = 0;
-  var jam;
-  var dayWeek;
+  String? jam;
+  String? dayWeek;
   String welcome = '';
   String hour = 'null';
   String statSensor = 'Disconnected';
+  var prevTimeUp;
 
   List statusCard = [
     // building, hardwareState, SensorState
-    ['Rumah', 'Online', 'Connected'],
+    ['Home', 'Online', 'Connected'],
     ['Salmon', 'Offline', 'Disconnected'],
     ['TIK', 'Offline', 'Disconnected'],
     ['Utama', 'Offline', 'Disconnected'],
@@ -42,13 +43,13 @@ class _HomePageState extends State<HomePage> {
     final DateFormat dateFormat = DateFormat.H();
     hour = dateFormat.format(now);
     var intHour = int.parse(hour);
-    if (intHour > 00 && intHour < 11) {
+    if (intHour >= 00 && intHour <= 10) {
       welcome = 'Selamat Pagi';
-    } else if (intHour > 10 && intHour < 15) {
+    } else if (intHour >= 11 && intHour <= 14) {
       welcome = 'Selamat Siang';
-    } else if (intHour > 14 && intHour < 19) {
+    } else if (intHour >= 15 && intHour <= 18) {
       welcome = 'Selamat Sore';
-    } else if (intHour > 18 && intHour < 00) {
+    } else if (intHour >= 19 && intHour <= 23) {
       welcome = 'Selamat Malam';
     }
 
@@ -56,14 +57,18 @@ class _HomePageState extends State<HomePage> {
     DatabaseReference timestampRef =
         FirebaseDatabase.instance.ref('buildings/rumah/sensors/').child('time');
     timestampRef.onValue.listen((event) {
-      setState(() {
-        timestamp = event.snapshot.value as int;
-      });
+      if (event.snapshot.exists) {
+        setState(() {
+          timestamp = event.snapshot.value as int;
+          var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 
-      var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-
-      jam = DateFormat.jms().format(date);
-      dayWeek = DateFormat.yMMMMd().format(date);
+          jam = DateFormat.Hm().format(date).toString();
+          dayWeek = DateFormat.yMd().format(date).toString();
+        });
+      } else {
+        jam = '-';
+        dayWeek = '-';
+      }
     });
 
     DatabaseReference ref_statusSensor =
@@ -137,24 +142,25 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Row(
                             children: [
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.only(right: 8.0),
-                                child: Icon(
-                                  Icons.cloud,
-                                  size: 50,
-                                  color: Colors.black,
+                                child: Image.asset(
+                                  'lib/icons/wheather.png',
+                                  color: Colors.grey[900],
                                 ),
                               ),
-                              Text(jam ?? 'null',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  )),
+                              Text(
+                                jam ?? 'null',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black87,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -165,10 +171,10 @@ class _HomePageState extends State<HomePage> {
 
               // WELCOME TEXT
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
+                padding: const EdgeInsets.only(left: 15.0),
                 child: Text(
                   welcome,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     color: Colors.black54,
                   ),
@@ -192,7 +198,7 @@ class _HomePageState extends State<HomePage> {
 
               // CARD STATUS SENSOR
               SizedBox(
-                height: 200,
+                height: 170,
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: ListView.builder(
@@ -205,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                           sensorState: statSensor,
                           todayEnergy: '200',
                           thisMonthEnergy: '1200',
-                          lastUpdate: jam ?? 'null',
+                          lastUpdate: '$jam, $dayWeek',
                         );
                       }),
                 ),
@@ -242,22 +248,22 @@ class _HomePageState extends State<HomePage> {
                   indicatorColor: Colors.black,
                   tabs: [
                     Tab(
-                      child: Text('Rumah'),
+                      child: Text('Home'),
                     ),
                     Tab(
-                      child: Text('G.Salmon'),
+                      child: Text('Building 1'),
                     ),
                     Tab(
-                      child: Text('G.TIK'),
+                      child: Text('Building 2'),
                     ),
                     Tab(
-                      child: Text('G.Utama'),
+                      child: Text('Building 3'),
                     ),
                     Tab(
-                      child: Text('G.Kakap'),
+                      child: Text('Building 4'),
                     ),
                     Tab(
-                      child: Text('G.Cakalang'),
+                      child: Text('Building 5'),
                     )
                   ],
                 ),

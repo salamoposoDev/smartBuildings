@@ -30,7 +30,6 @@ class _TabRumahState extends State<TabRumah> {
         FirebaseDatabase.instance.ref('$pathRumah/sensors/').child('realtime/');
     powerSensors.onValue.listen((event) {
       realtimeData = event.snapshot.value;
-      final parse = jsonEncode(realtimeData);
     });
     return StreamBuilder(
         stream: powerSensors.onValue,
