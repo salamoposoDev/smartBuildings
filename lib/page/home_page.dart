@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   String hour = 'null';
   String dateNow = 'null';
   String statSensor = 'Disconnected';
-  var prevTimeUp;
+  int harga = 1444;
 
   List statusCard = [
     // building, hardwareState, SensorState
@@ -37,7 +36,6 @@ class _HomePageState extends State<HomePage> {
     ['TIK', 'Offline', 'Disconnected'],
     ['Utama', 'Offline', 'Disconnected'],
     ['Kakap', 'Offline', 'Disconnected'],
-    ['Cakalang', 'Offline', 'Disconnected'],
   ];
 
   @override
@@ -49,45 +47,19 @@ class _HomePageState extends State<HomePage> {
     dateNow = DateFormat.yMMMd().format(now);
     var intHour = int.parse(hour);
     if (intHour >= 00 && intHour <= 10) {
-      welcome = 'Selamat Pagi';
+      welcome = 'Good Morning';
     } else if (intHour >= 11 && intHour <= 14) {
-      welcome = 'Selamat Siang';
+      welcome = 'Good Afternoon';
     } else if (intHour >= 15 && intHour <= 18) {
-      welcome = 'Selamat Sore';
+      welcome = 'Good Afternoon';
     } else if (intHour >= 19 && intHour <= 23) {
-      welcome = 'Selamat Malam';
+      welcome = 'Good Night';
     }
 
     // DATABASE REF STATUS SENSOR
 
     DatabaseReference statusHardwareRef =
         FirebaseDatabase.instance.ref('buildingStat');
-
-    // firebase Timestamp
-    DatabaseReference timestampRef =
-        FirebaseDatabase.instance.ref('buildings/rumah/sensors/').child('time');
-    timestampRef.onValue.listen((event) {
-      setState(() {
-        timestamp = event.snapshot.value as int;
-        var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-
-        jam = DateFormat.Hm().format(date).toString();
-        dayWeek = DateFormat.yMd().format(date).toString();
-      });
-    });
-
-    DatabaseReference ref_statusSensor =
-        FirebaseDatabase.instance.ref('buildings/rumah/sensors/sensorState');
-    ref_statusSensor.onValue.listen(
-      (event) {
-        int stat = event.snapshot.value as int;
-        if (stat == 1) {
-          statSensor = 'Connected';
-        } else {
-          statSensor = 'Disconnected';
-        }
-      },
-    );
 
     return DefaultTabController(
       length: 6,
@@ -148,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(right: 8.0),
+                                padding: const EdgeInsets.only(right: 8.0),
                                 child: Image.asset(
                                   'lib/icons/wheather.png',
                                   color: Colors.grey[900],
@@ -202,7 +174,6 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // CARD STATUS SENSOR
-
               StreamBuilder(
                   stream: statusHardwareRef.onValue,
                   builder: (context, snap) {
@@ -259,8 +230,8 @@ class _HomePageState extends State<HomePage> {
                         '$b1Jam, $b1Date',
                         '$b2Jam, $b2Date',
                         '$b3Jam, $b3Date',
-                        '$b3Jam, $b3Date',
-                        '$b3Jam, $b3Date',
+                        '$b4Jam, $b4Date',
+                        '$b5Jam, $b5Date',
                       ];
 
                       List<String> pzemStatList = [
@@ -270,6 +241,23 @@ class _HomePageState extends State<HomePage> {
                         '${sensorStatus.b3Sens}',
                         '${sensorStatus.b4Sens}',
                         '${sensorStatus.b5Sens}',
+                      ];
+
+                      List<String> totalEnergyList = [
+                        '${sensorStatus.hTotalEnergy}',
+                        '${sensorStatus.b1TotalEnergy}',
+                        '${sensorStatus.b2TotalEnergy}',
+                        '${sensorStatus.b3TotalEnergy}',
+                        '${sensorStatus.b4TotalEnergy}',
+                        '${sensorStatus.b5TotalEnergy}',
+                      ];
+
+                      List hargaList = [
+                        sensorStatus.hTotalEnergy * harga,
+                        sensorStatus.b1TotalEnergy * harga,
+                        sensorStatus.b2TotalEnergy * harga,
+                        sensorStatus.b3TotalEnergy * harga,
+                        sensorStatus.b4TotalEnergy * harga,
                       ];
 
                       return SizedBox(
@@ -284,15 +272,35 @@ class _HomePageState extends State<HomePage> {
                                   buildingsName: 'Device',
                                   hardwareState: statusCard[index][0],
                                   sensorState: pzemStatList[index],
-                                  todayEnergy: '200',
-                                  thisMonthEnergy: '1200',
+                                  todayEnergy: totalEnergyList[index],
+                                  thisMonthEnergy: '0.0',
                                   lastUpdate: sensorStatList[index],
+                                  harga: hargaList[index].toStringAsFixed(2),
                                 );
                               }),
                         ),
                       );
                     } else {
-                      return Text('salamoposo');
+                      return SizedBox(
+                        height: 170,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: statusCard.length,
+                              itemBuilder: (context, index) {
+                                return SensorsCardStatus(
+                                  buildingsName: 'Devices',
+                                  hardwareState: statusCard[index][0],
+                                  sensorState: 'null',
+                                  todayEnergy: 'null',
+                                  thisMonthEnergy: 'null',
+                                  lastUpdate: 'null',
+                                  harga: 'null',
+                                );
+                              }),
+                        ),
+                      );
                     }
                   }),
               // SizedBox(

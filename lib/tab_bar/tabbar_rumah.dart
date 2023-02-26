@@ -13,7 +13,6 @@ class TabRumah extends StatefulWidget {
 
 class _TabRumahState extends State<TabRumah> {
   final String pathRumah = 'buildings/rumah';
-  var realtimeData;
 
   List sensorComponent = [
     // sensorName, SensorIcon, SensorValue
@@ -21,6 +20,8 @@ class _TabRumahState extends State<TabRumah> {
     ['Current', 'lib/icons/current.png', '0 A'],
     ['Power', 'lib/icons/power.png', '0 W'],
     ['Energy', 'lib/icons/energy.png', '0 kWh'],
+    ['Cosphi', 'lib/icons/phi.png', '0'],
+    ['Freq', 'lib/icons/freq.png', '0 Hz'],
   ];
 
   @override
@@ -28,9 +29,9 @@ class _TabRumahState extends State<TabRumah> {
     // GET DATA SENSORS
     DatabaseReference powerSensors =
         FirebaseDatabase.instance.ref('$pathRumah/sensors/').child('realtime/');
-    powerSensors.onValue.listen((event) {
-      realtimeData = event.snapshot.value;
-    });
+    // powerSensors.onValue.listen((event) {
+    //   realtimeData = event.snapshot.value;
+    // });
     return StreamBuilder(
         stream: powerSensors.onValue,
         builder: (contex, snap) {
@@ -47,6 +48,8 @@ class _TabRumahState extends State<TabRumah> {
               '${energyModel.current} A',
               '${energyModel.power} w',
               '${energyModel.energy} kWh',
+              '${energyModel.cosphi}',
+              '${energyModel.freq} Hz',
             ];
             return GridView.builder(
                 itemCount: sensorComponent.length,

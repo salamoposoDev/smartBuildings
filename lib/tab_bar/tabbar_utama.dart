@@ -14,18 +14,20 @@ class TabUtama extends StatefulWidget {
 class _TabUtamaState extends State<TabUtama> {
   List sensorComponent = [
     // sensorName, SensorIcon, SensorValue
-    ['Voltage', 'lib/icons/volt.png', '220 V'],
-    ['Current', 'lib/icons/current.png', '21 A'],
-    ['Power', 'lib/icons/power.png', '670 W'],
-    ['Energy', 'lib/icons/energy.png', '1200 kWh'],
+    ['Voltage', 'lib/icons/volt.png', '0 V'],
+    ['Current', 'lib/icons/current.png', '0 A'],
+    ['Power', 'lib/icons/power.png', '0 W'],
+    ['Energy', 'lib/icons/energy.png', '0 kWh'],
+    ['Cosphi', 'lib/icons/phi.png', '0'],
+    ['Freq', 'lib/icons/freq.png', '0 Hz'],
   ];
   @override
   Widget build(BuildContext context) {
     String path = 'buildings/gedungUtama/sensors/';
-    DatabaseReference _refPower =
-        FirebaseDatabase.instance.ref('$path').child('realtime/');
+    DatabaseReference refPower =
+        FirebaseDatabase.instance.ref(path).child('realtime/');
     return StreamBuilder(
-      stream: _refPower.onValue,
+      stream: refPower.onValue,
       builder: (context, snap) {
         if (snap.hasData &&
             !snap.hasError &&
@@ -39,23 +41,25 @@ class _TabUtamaState extends State<TabUtama> {
             '${dataSensor.current} A',
             '${dataSensor.power} W',
             '${dataSensor.energy} kWh',
+            '${dataSensor.cosphi}',
+            '${dataSensor.freq} Hz',
           ];
           return GridView.builder(
-              itemCount: 4,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemBuilder: (context, Index) {
+              itemCount: sensorComponent.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
+              itemBuilder: (context, index) {
                 return Monitor(
-                  sensorName: sensorComponent[Index][0],
-                  sensorIcon: sensorComponent[Index][1],
-                  sensorValue: sensorList[Index],
+                  sensorName: sensorComponent[index][0],
+                  sensorIcon: sensorComponent[index][1],
+                  sensorValue: sensorList[index],
                 );
               });
         } else {
           return GridView.builder(
             itemCount: sensorComponent.length,
-            gridDelegate:
-                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2),
             itemBuilder: (context, index) {
               return Monitor(
                 sensorName: sensorComponent[index][0],

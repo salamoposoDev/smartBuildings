@@ -1,9 +1,9 @@
 class EnergyModel {
   int? voltage;
-  // ignore: prefer_typing_uninitialized_variables
-  var current, power, energy, cosphi;
+  dynamic current, power, energy, cosphi, freq;
 
   EnergyModel({
+    this.freq,
     this.power,
     this.cosphi,
     this.current,
@@ -12,11 +12,12 @@ class EnergyModel {
   });
 
   factory EnergyModel.fromJson(Map<String, dynamic> json) => EnergyModel(
-        power: (json['power'] as dynamic?)?.toDouble(),
-        cosphi: (json['cosphi'] as dynamic?)?.toDouble(),
-        current: (json['current'] as dynamic?)?.toDouble(),
+        freq: (json['freq'] as dynamic)?.toDouble(),
+        power: (json['power'] as dynamic)?.toDouble(),
+        cosphi: (json['cosphi'] as dynamic)?.toDouble(),
+        current: (json['current'] as dynamic)?.toDouble(),
         voltage: json['voltage'] as int?,
-        energy: (json['energy'] as dynamic?)?.toDouble(),
+        energy: (json['energy'] as dynamic)?.toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -25,5 +26,6 @@ class EnergyModel {
         'current': current,
         'voltage': voltage,
         'energy': energy,
+        'freq': freq,
       };
 }

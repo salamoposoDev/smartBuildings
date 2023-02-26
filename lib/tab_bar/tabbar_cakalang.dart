@@ -1,24 +1,34 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:smartbuilding/component/monitor.dart';
 
-class TabCakalang extends StatelessWidget {
+class TabCakalang extends StatefulWidget {
   const TabCakalang({super.key});
 
   @override
+  State<TabCakalang> createState() => _TabCakalangState();
+}
+
+class _TabCakalangState extends State<TabCakalang> {
+  List sensorComponent = [
+    // sensorName, SensorIcon, SensorValue
+    ['Voltage', 'lib/icons/volt.png', '0 V'],
+    ['Current', 'lib/icons/current.png', '0 A'],
+    ['Power', 'lib/icons/power.png', '0 W'],
+    ['Energy', 'lib/icons/energy.png', '0 kWh'],
+    ['Cosphi', 'lib/icons/phi.png', '0'],
+    ['Freq', 'lib/icons/freq.png', '0 Hz'],
+  ];
+  @override
   Widget build(BuildContext context) {
-    DatabaseReference ref_sensor =
-        FirebaseDatabase.instance.ref('buildings/cakalang/sensors/realtime/');
     return GridView.builder(
-        itemCount: 4,
+        itemCount: sensorComponent.length,
         gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (context, index) {
           return Monitor(
-            sensorName: "Name",
-            sensorIcon: "lib/icons/energy.png",
-            sensorValue: "value",
+            sensorName: sensorComponent[index][0],
+            sensorIcon: sensorComponent[index][1],
+            sensorValue: sensorComponent[index][2],
           );
         });
   }

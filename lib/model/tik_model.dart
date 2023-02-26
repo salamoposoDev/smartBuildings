@@ -1,19 +1,24 @@
 import 'dart:convert';
 
 class Test {
-  double? current;
-  int? cosphi;
-  int? power;
-  int? energy;
+  dynamic current, freq, power, cosphi, energy;
   int? voltage;
 
-  Test({this.current, this.cosphi, this.power, this.energy, this.voltage});
+  Test({
+    this.current,
+    this.cosphi,
+    this.power,
+    this.energy,
+    this.voltage,
+    this.freq,
+  });
 
   factory Test.fromMap(Map<String, dynamic> data) => Test(
-        current: (data['current'] as num?)?.toDouble(),
-        cosphi: data['cosphi'] as int?,
-        power: data['power'] as int?,
-        energy: data['energy'] as int?,
+        freq: (data['freq'] as dynamic),
+        current: (data['current'] as dynamic),
+        cosphi: (data['cosphi'] as dynamic),
+        power: (data['power'] as dynamic),
+        energy: (data['energy'] as dynamic),
         voltage: data['voltage'] as int?,
       );
 

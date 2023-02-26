@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class SensorsCardStatus extends StatelessWidget {
   String buildingsName,
       hardwareState,
       sensorState,
       todayEnergy,
       thisMonthEnergy,
-      lastUpdate;
+      lastUpdate,
+      harga;
+
   SensorsCardStatus({
     required this.buildingsName,
     required this.hardwareState,
@@ -15,6 +18,7 @@ class SensorsCardStatus extends StatelessWidget {
     required this.todayEnergy,
     required this.thisMonthEnergy,
     required this.lastUpdate,
+    required this.harga,
     super.key,
   });
 
@@ -32,10 +36,11 @@ class SensorsCardStatus extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // last update
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -58,9 +63,13 @@ class SensorsCardStatus extends StatelessWidget {
                       ),
                     ],
                   ),
+                  // Device name
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Row(
                         children: [
                           Text(
@@ -82,7 +91,7 @@ class SensorsCardStatus extends StatelessWidget {
                       Row(
                         children: [
                           const Text(
-                            'Sensor : ',
+                            'Sensor  ',
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -109,36 +118,43 @@ class SensorsCardStatus extends StatelessWidget {
                 color: Colors.white24,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+
+            // Total Usage
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Today',
+                        'Total Usage',
                         style: TextStyle(
                           color: Colors.white54,
                           fontSize: 16,
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
                       Text(
                         '$todayEnergy kWh',
                         style: GoogleFonts.bebasNeue(
                           color: Colors.white,
-                          fontSize: 35,
+                          fontSize: 34,
                         ),
+                      ),
+                      // Harga
+                      Text(
+                        'Rp. $harga',
+                        maxLines: 5,
+                        style: GoogleFonts.montserrat(
+                            color: Colors.white70, fontSize: 18),
                       ),
                     ],
                   ),
+
+                  // Month Usage
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
                         'This Month',
@@ -147,15 +163,17 @@ class SensorsCardStatus extends StatelessWidget {
                           fontSize: 16,
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
                       Text(
                         '$thisMonthEnergy kWh',
                         style: GoogleFonts.bebasNeue(
                           color: Colors.white,
                           fontSize: 35,
                         ),
+                      ),
+                      Text(
+                        '0.0%',
+                        style: GoogleFonts.montserrat(
+                            color: Colors.white70, fontSize: 18),
                       ),
                     ],
                   ),

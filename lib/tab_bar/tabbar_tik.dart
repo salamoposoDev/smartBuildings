@@ -14,17 +14,19 @@ class TabTik extends StatefulWidget {
 class _TabTikState extends State<TabTik> {
   List sensorComponent = [
     // sensorName, SensorIcon, SensorValue
-    ['Voltage', 'lib/icons/volt.png', '220 V'],
-    ['Current', 'lib/icons/current.png', '21 A'],
-    ['Power', 'lib/icons/power.png', '670 W'],
-    ['Energy', 'lib/icons/energy.png', '1200 kWh'],
+    ['Voltage', 'lib/icons/volt.png', '0 V'],
+    ['Current', 'lib/icons/current.png', '0 A'],
+    ['Power', 'lib/icons/power.png', '0 W'],
+    ['Energy', 'lib/icons/energy.png', '0 kWh'],
+    ['Cosphi', 'lib/icons/phi.png', '0'],
+    ['Freq', 'lib/icons/freq.png', '0 Hz'],
   ];
 
   @override
   Widget build(BuildContext context) {
     String path = 'buildings/gedungTik/sensors/';
-    DatabaseReference _refSensors =
-        FirebaseDatabase.instance.ref('$path').child('realtime/');
+    DatabaseReference refSensors =
+        FirebaseDatabase.instance.ref(path).child('realtime/');
     // _refSensors.onValue.listen((event) {
     //   var realtimeData = event.snapshot.value;
     //   stringData = jsonEncode(event.snapshot.value);
@@ -40,7 +42,7 @@ class _TabTikState extends State<TabTik> {
     // });
 
     return StreamBuilder(
-      stream: _refSensors.onValue,
+      stream: refSensors.onValue,
       builder: (context, snap) {
         if (snap.hasData &&
             !snap.hasError &&
@@ -52,11 +54,13 @@ class _TabTikState extends State<TabTik> {
             '${test.current} A',
             '${test.power} W',
             '${test.energy} kWh',
+            '${test.cosphi}',
+            '${test.freq} hz',
           ];
           return GridView.builder(
               itemCount: sensorComponent.length,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
               itemBuilder: (context, index) {
                 return Monitor(
                   sensorName: sensorComponent[index][0],
@@ -67,8 +71,8 @@ class _TabTikState extends State<TabTik> {
         } else {
           return GridView.builder(
               itemCount: sensorComponent.length,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
               itemBuilder: (context, index) {
                 return Monitor(
                   sensorName: sensorComponent[index][0],
