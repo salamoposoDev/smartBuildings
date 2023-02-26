@@ -24,6 +24,15 @@ class _TabRumahState extends State<TabRumah> {
     ['Freq', 'lib/icons/freq.png', '0 Hz'],
   ];
 
+  List satuanSensor = [
+    ' V',
+    ' A',
+    ' W',
+    ' kWh',
+    '',
+    ' Hz',
+  ];
+
   @override
   Widget build(BuildContext context) {
     // GET DATA SENSORS
@@ -42,8 +51,17 @@ class _TabRumahState extends State<TabRumah> {
             EnergyModel energyModel =
                 EnergyModel.fromJson(json.decode(stringData));
 
+            List valueSensor = [
+              energyModel.voltage,
+              energyModel.current,
+              energyModel.power,
+              energyModel.energy,
+              energyModel.cosphi,
+              energyModel.freq,
+            ];
+
             // Sensor Value From database
-            List<String> powerRumahValue = [
+            List powerRumahValue = [
               '${energyModel.voltage} V',
               '${energyModel.current} A',
               '${energyModel.power} w',
@@ -59,7 +77,8 @@ class _TabRumahState extends State<TabRumah> {
                   return Monitor(
                     sensorName: sensorComponent[index][0],
                     sensorIcon: sensorComponent[index][1],
-                    sensorValue: powerRumahValue[index],
+                    sensorValue: valueSensor[index].toStringAsFixed(2),
+                    satuan: satuanSensor[index],
                   );
                 });
           } else {
@@ -72,6 +91,7 @@ class _TabRumahState extends State<TabRumah> {
                     sensorName: sensorComponent[index][0],
                     sensorIcon: sensorComponent[index][1],
                     sensorValue: sensorComponent[index][2],
+                    satuan: satuanSensor[index],
                   );
                 });
           }

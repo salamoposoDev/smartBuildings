@@ -26,6 +26,7 @@ class TabSalmon extends StatelessWidget {
             sensorName: sensorComponent[index][0],
             sensorIcon: sensorComponent[index][1],
             sensorValue: sensorComponent[index][2],
+            satuan: 'a',
           );
         });
   }

@@ -53,6 +53,7 @@ class _TabUtamaState extends State<TabUtama> {
                   sensorName: sensorComponent[index][0],
                   sensorIcon: sensorComponent[index][1],
                   sensorValue: sensorList[index],
+                  satuan: 'v',
                 );
               });
         } else {
@@ -65,6 +66,7 @@ class _TabUtamaState extends State<TabUtama> {
                 sensorName: sensorComponent[index][0],
                 sensorIcon: sensorComponent[index][1],
                 sensorValue: sensorComponent[index][2],
+                satuan: 'v',
               );
             },
           );

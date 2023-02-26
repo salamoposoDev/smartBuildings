@@ -30,22 +30,22 @@ class SensorStatus {
   });
 
   factory SensorStatus.fromJson(Map<String, dynamic> json) => SensorStatus(
-        hTotalEnergy: (json['hTotalEnergy'] as dynamic)?.toDouble(),
+        hTotalEnergy: (json['hTotalEnergy'] as dynamic),
         hSens: json['hSens'] as String?,
         hTime: json['hTime'] as int?,
-        b1TotalEnergy: (json['b1TotalEnergy'] as dynamic)?.toDouble(),
+        b1TotalEnergy: (json['b1TotalEnergy'] as dynamic),
         b1Sens: json['b1Sens'] as String?,
         b1Time: json['b1Time'] as int?,
-        b2TotalEnergy: (json['b2TotalEnergy'] as dynamic)?.toDouble(),
+        b2TotalEnergy: (json['b2TotalEnergy'] as dynamic),
         b2Sens: json['b2Sens'] as String?,
         b2Time: json['b2Time'] as int?,
-        b3TotalEnergy: (json['b3TotalEnergy'] as dynamic)?.toDouble(),
+        b3TotalEnergy: (json['b3TotalEnergy'] as dynamic),
         b3Sens: json['b3Sens'] as String?,
         b3Time: json['b3Time'] as int?,
-        b4TotalEnergy: (json['b4TotalEnergy'] as dynamic)?.toDouble(),
+        b4TotalEnergy: (json['b4TotalEnergy'] as dynamic),
         b4Sens: json['b4Sens'] as String?,
         b4Time: json['b4Time'] as int?,
-        b5TotalEnergy: (json['b5TotalEnergy'] as dynamic)?.toDouble,
+        b5TotalEnergy: (json['b5TotalEnergy'] as dynamic),
         b5Sens: json['b5Sens'] as String?,
         b5Time: json['b5Time'] as int?,
       );

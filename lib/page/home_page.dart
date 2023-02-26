@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         const Text(
-                          'Hi, There',
+                          'Hi, Yopi',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black87,
@@ -166,8 +166,8 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
-                      'Energy Monitoring',
-                      style: GoogleFonts.bebasNeue(fontSize: 42),
+                      'Smart Energy Monitoring',
+                      style: GoogleFonts.bebasNeue(fontSize: 36),
                     ),
                   ),
                 ],
@@ -243,21 +243,21 @@ class _HomePageState extends State<HomePage> {
                         '${sensorStatus.b5Sens}',
                       ];
 
-                      List<String> totalEnergyList = [
-                        '${sensorStatus.hTotalEnergy}',
-                        '${sensorStatus.b1TotalEnergy}',
-                        '${sensorStatus.b2TotalEnergy}',
-                        '${sensorStatus.b3TotalEnergy}',
-                        '${sensorStatus.b4TotalEnergy}',
-                        '${sensorStatus.b5TotalEnergy}',
+                      List totalEnergyList = [
+                        (sensorStatus.hTotalEnergy / 100),
+                        (sensorStatus.b1TotalEnergy / 100),
+                        (sensorStatus.b2TotalEnergy / 100),
+                        (sensorStatus.b3TotalEnergy / 100),
+                        (sensorStatus.b4TotalEnergy / 100),
+                        (sensorStatus.b5TotalEnergy / 100),
                       ];
 
                       List hargaList = [
-                        sensorStatus.hTotalEnergy * harga,
-                        sensorStatus.b1TotalEnergy * harga,
-                        sensorStatus.b2TotalEnergy * harga,
-                        sensorStatus.b3TotalEnergy * harga,
-                        sensorStatus.b4TotalEnergy * harga,
+                        (sensorStatus.hTotalEnergy / 100) * harga,
+                        (sensorStatus.b1TotalEnergy / 100) * harga,
+                        (sensorStatus.b2TotalEnergy / 100) * harga,
+                        (sensorStatus.b3TotalEnergy / 100) * harga,
+                        (sensorStatus.b4TotalEnergy / 100) * harga,
                       ];
 
                       return SizedBox(
@@ -272,7 +272,8 @@ class _HomePageState extends State<HomePage> {
                                   buildingsName: 'Device',
                                   hardwareState: statusCard[index][0],
                                   sensorState: pzemStatList[index],
-                                  todayEnergy: totalEnergyList[index],
+                                  todayEnergy:
+                                      totalEnergyList[0].toStringAsFixed(2),
                                   thisMonthEnergy: '0.0',
                                   lastUpdate: sensorStatList[index],
                                   harga: hargaList[index].toStringAsFixed(2),

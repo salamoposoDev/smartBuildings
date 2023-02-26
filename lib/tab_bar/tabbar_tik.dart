@@ -66,6 +66,7 @@ class _TabTikState extends State<TabTik> {
                   sensorName: sensorComponent[index][0],
                   sensorIcon: sensorComponent[index][1],
                   sensorValue: listValue[index],
+                  satuan: 'a',
                 );
               });
         } else {
@@ -78,6 +79,7 @@ class _TabTikState extends State<TabTik> {
                   sensorName: sensorComponent[index][0],
                   sensorIcon: sensorComponent[index][1],
                   sensorValue: sensorComponent[index][2],
+                  satuan: 'v',
                 );
               });
         }

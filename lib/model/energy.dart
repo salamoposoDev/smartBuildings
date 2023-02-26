@@ -12,12 +12,12 @@ class EnergyModel {
   });
 
   factory EnergyModel.fromJson(Map<String, dynamic> json) => EnergyModel(
-        freq: (json['freq'] as dynamic)?.toDouble(),
-        power: (json['power'] as dynamic)?.toDouble(),
-        cosphi: (json['cosphi'] as dynamic)?.toDouble(),
-        current: (json['current'] as dynamic)?.toDouble(),
+        freq: (json['freq'] as dynamic),
+        power: (json['power'] as dynamic),
+        cosphi: (json['cosphi'] as dynamic),
+        current: (json['current'] as dynamic),
         voltage: json['voltage'] as int?,
-        energy: (json['energy'] as dynamic)?.toDouble(),
+        energy: (json['energy'] as dynamic),
       );
 
   Map<String, dynamic> toJson() => {

@@ -6,8 +6,10 @@ class Monitor extends StatefulWidget {
   String sensorName;
   String sensorIcon;
   String sensorValue;
+  String satuan;
   Monitor({
     super.key,
+    required this.satuan,
     required this.sensorName,
     required this.sensorIcon,
     required this.sensorValue,
@@ -28,16 +30,30 @@ class _MonitorState extends State<Monitor> {
           borderRadius: BorderRadius.circular(15),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             const SizedBox(
               height: 10,
             ),
-            Text(
-              widget.sensorValue,
-              style: GoogleFonts.bebasNeue(
-                color: Colors.white,
-                fontSize: 30,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    widget.sensorValue,
+                    style: GoogleFonts.bebasNeue(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
+                  ),
+                  Text(
+                    '${widget.satuan} ',
+                    style: GoogleFonts.bebasNeue(
+                        color: Colors.white, fontSize: 28),
+                  ),
+                ],
               ),
             ),
             Row(

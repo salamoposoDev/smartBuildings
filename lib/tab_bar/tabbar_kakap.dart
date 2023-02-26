@@ -29,6 +29,7 @@ class _TabKakapState extends State<TabKakap> {
             sensorName: sensorComponent[index][0],
             sensorIcon: sensorComponent[index][1],
             sensorValue: sensorComponent[index][2],
+            satuan: 'a',
           );
         });
   }
