@@ -52,12 +52,12 @@ class _TabRumahState extends State<TabRumah> {
                 EnergyModel.fromJson(json.decode(stringData));
 
             List valueSensor = [
-              energyModel.voltage,
-              energyModel.current,
-              energyModel.power,
-              energyModel.energy,
-              energyModel.cosphi,
-              energyModel.freq,
+              energyModel.voltage?.toStringAsFixed(0),
+              energyModel.current.toStringAsFixed(1),
+              energyModel.power.toStringAsFixed(1),
+              energyModel.energy.toStringAsFixed(2),
+              energyModel.cosphi.toStringAsFixed(1),
+              energyModel.freq.toStringAsFixed(0),
             ];
 
             // Sensor Value From database
@@ -77,7 +77,7 @@ class _TabRumahState extends State<TabRumah> {
                   return Monitor(
                     sensorName: sensorComponent[index][0],
                     sensorIcon: sensorComponent[index][1],
-                    sensorValue: valueSensor[index].toStringAsFixed(2),
+                    sensorValue: valueSensor[index],
                     satuan: satuanSensor[index],
                   );
                 });

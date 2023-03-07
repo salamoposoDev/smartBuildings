@@ -73,6 +73,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "salamoposo"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

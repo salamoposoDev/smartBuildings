@@ -5,10 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smartbuilding/component/sensors_card_status.dart';
 import 'package:smartbuilding/model/status_sensors.dart';
+import 'package:smartbuilding/page/history_page.dart';
 import 'package:smartbuilding/tab_bar/tabbar_cakalang.dart';
 import 'package:smartbuilding/tab_bar/tabbar_kakap.dart';
 import 'package:smartbuilding/tab_bar/tabbar_rumah.dart';
-import 'package:smartbuilding/tab_bar/tabbar_salmon.dart';
+import 'package:smartbuilding/tab_bar/building1.dart';
 import 'package:smartbuilding/tab_bar/tabbar_tik.dart';
 import 'package:smartbuilding/tab_bar/tabbar_utama.dart';
 
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   String dateNow = 'null';
   String statSensor = 'Disconnected';
   int harga = 1444;
+  dynamic kwhTot;
 
   List statusCard = [
     // building, hardwareState, SensorState
@@ -56,8 +58,24 @@ class _HomePageState extends State<HomePage> {
       welcome = 'Good Night';
     }
 
-    // DATABASE REF STATUS SENSOR
+    // GET DATA TOTAL KWH
+    DatabaseReference totalKwh = FirebaseDatabase.instance
+        .ref('buildings/rumah/sensors/realtime/energy/');
+    totalKwh.onValue.listen((event) {
+      kwhTot = event.snapshot.value;
+    });
 
+    //get data push kwh
+    // DatabaseReference dataKwh =
+    //     FirebaseDatabase.instance.ref('buildings/rumah/sensors/kwhPush/');
+    // dataKwh.onValue.listen((event) {
+    //   // print(event.snapshot.value);
+    //   print(event.snapshot.children.last.value);
+    //   String? newKey = dataKwh.push().key;
+    // });
+    // print(queryData.orderByKey().equalTo('time'));
+
+    // DATABASE REF STATUS SENSOR
     DatabaseReference statusHardwareRef =
         FirebaseDatabase.instance.ref('buildingStat');
 
@@ -244,16 +262,16 @@ class _HomePageState extends State<HomePage> {
                       ];
 
                       List totalEnergyList = [
-                        (sensorStatus.hTotalEnergy / 100),
-                        (sensorStatus.b1TotalEnergy / 100),
-                        (sensorStatus.b2TotalEnergy / 100),
-                        (sensorStatus.b3TotalEnergy / 100),
-                        (sensorStatus.b4TotalEnergy / 100),
-                        (sensorStatus.b5TotalEnergy / 100),
+                        (kwhTot),
+                        (sensorStatus.b1TotalEnergy),
+                        (sensorStatus.b2TotalEnergy),
+                        (sensorStatus.b3TotalEnergy),
+                        (sensorStatus.b4TotalEnergy),
+                        (sensorStatus.b5TotalEnergy),
                       ];
 
                       List hargaList = [
-                        (sensorStatus.hTotalEnergy / 100) * harga,
+                        (kwhTot * harga),
                         (sensorStatus.b1TotalEnergy / 100) * harga,
                         (sensorStatus.b2TotalEnergy / 100) * harga,
                         (sensorStatus.b3TotalEnergy / 100) * harga,
@@ -273,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                   hardwareState: statusCard[index][0],
                                   sensorState: pzemStatList[index],
                                   todayEnergy:
-                                      totalEnergyList[0].toStringAsFixed(2),
+                                      totalEnergyList[index].toStringAsFixed(2),
                                   thisMonthEnergy: '0.0',
                                   lastUpdate: sensorStatList[index],
                                   harga: hargaList[index].toStringAsFixed(2),
@@ -304,39 +322,49 @@ class _HomePageState extends State<HomePage> {
                       );
                     }
                   }),
-              // SizedBox(
-              //   height: 170,
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(5.0),
-              //     child: ListView.builder(
-              //         scrollDirection: Axis.horizontal,
-              //         itemCount: statusCard.length,
-              //         itemBuilder: (context, index) {
-              //           return SensorsCardStatus(
-              //             buildingsName: statusCard[index][0],
-              //             hardwareState: statusCard[index][1],
-              //             sensorState: statSensor,
-              //             todayEnergy: '200',
-              //             thisMonthEnergy: '1200',
-              //             lastUpdate: '$jam, $dayWeek',
-              //           );
-              //         }),
-              //   ),
-              // ),
 
-              const SizedBox(
-                height: 10,
-              ),
-
-              const Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Text(
-                  'All Buildings',
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      'All Buildings',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HistoryPage(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: const [
+                        Text(
+                          'History',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20,
+                          color: Colors.black54,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
 
               const Padding(

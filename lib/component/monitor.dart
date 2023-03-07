@@ -36,25 +36,22 @@ class _MonitorState extends State<Monitor> {
             const SizedBox(
               height: 10,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    widget.sensorValue,
-                    style: GoogleFonts.bebasNeue(
-                      color: Colors.white,
-                      fontSize: 30,
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.sensorValue,
+                  style: GoogleFonts.bebasNeue(
+                    color: Colors.white,
+                    fontSize: 30,
                   ),
-                  Text(
-                    '${widget.satuan} ',
-                    style: GoogleFonts.bebasNeue(
-                        color: Colors.white, fontSize: 28),
-                  ),
-                ],
-              ),
+                ),
+                Text(
+                  widget.satuan,
+                  style:
+                      GoogleFonts.bebasNeue(color: Colors.white, fontSize: 28),
+                ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

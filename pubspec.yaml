@@ -42,6 +42,8 @@ dependencies:
   firebase_database: ^10.0.10
   flutter_native_timezone: ^2.0.0
   intl: ^0.18.0
+  d_chart: ^2.2.11
+  syncfusion_flutter_charts: ^20.4.52
 
 dev_dependencies:
   flutter_test:
