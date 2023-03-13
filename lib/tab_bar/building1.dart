@@ -7,7 +7,7 @@ import 'package:smartbuilding/model/b1_model.dart';
 
 // ignore: must_be_immutable
 class TabSalmon extends StatefulWidget {
-  TabSalmon({super.key});
+  const TabSalmon({super.key});
 
   @override
   State<TabSalmon> createState() => _TabSalmonState();

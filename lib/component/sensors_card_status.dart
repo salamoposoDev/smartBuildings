@@ -7,7 +7,7 @@ class SensorsCardStatus extends StatelessWidget {
       hardwareState,
       sensorState,
       todayEnergy,
-      thisMonthEnergy,
+      lastMonth,
       lastUpdate,
       harga;
 
@@ -16,7 +16,7 @@ class SensorsCardStatus extends StatelessWidget {
     required this.hardwareState,
     required this.sensorState,
     required this.todayEnergy,
-    required this.thisMonthEnergy,
+    required this.lastMonth,
     required this.lastUpdate,
     required this.harga,
     super.key,
@@ -129,7 +129,7 @@ class SensorsCardStatus extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Total Usage',
+                        'This Month',
                         style: TextStyle(
                           color: Colors.white54,
                           fontSize: 16,
@@ -157,21 +157,21 @@ class SensorsCardStatus extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'This Month',
+                        'Last Month',
                         style: TextStyle(
                           color: Colors.white54,
                           fontSize: 16,
                         ),
                       ),
                       Text(
-                        '$thisMonthEnergy kWh',
+                        '$lastMonth kWh',
                         style: GoogleFonts.bebasNeue(
                           color: Colors.white,
                           fontSize: 35,
                         ),
                       ),
                       Text(
-                        '0.0%',
+                        'Rp. 0',
                         style: GoogleFonts.montserrat(
                             color: Colors.white70, fontSize: 18),
                       ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smartbuilding/component/sensors_card_status.dart';
 import 'package:smartbuilding/model/status_sensors.dart';
-import 'package:smartbuilding/page/history_page.dart';
+import 'package:smartbuilding/page/history/history_page.dart';
 import 'package:smartbuilding/tab_bar/tabbar_cakalang.dart';
 import 'package:smartbuilding/tab_bar/tabbar_kakap.dart';
 import 'package:smartbuilding/tab_bar/tabbar_rumah.dart';
@@ -21,7 +22,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final db = FirebaseDatabase.instance;
   int timestamp = 0;
+  dynamic timestampB1 = 0;
   String? jam;
   String? dayWeek;
   String welcome = '';
@@ -29,7 +32,13 @@ class _HomePageState extends State<HomePage> {
   String dateNow = 'null';
   String statSensor = 'Disconnected';
   int harga = 1444;
-  dynamic kwhTot;
+  dynamic kwhTot = 0;
+  dynamic waktu = 0;
+  dynamic totalkwhB1;
+  dynamic b1pzem012 = 0;
+
+  final DateTime now = DateTime.now();
+  final DateFormat dateFormat = DateFormat.H();
 
   List statusCard = [
     // building, hardwareState, SensorState
@@ -42,27 +51,59 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // DATE TIME
-    final DateTime now = DateTime.now();
-    final DateFormat dateFormat = DateFormat.H();
-    hour = dateFormat.format(now);
     dateNow = DateFormat.yMMMd().format(now);
-    var intHour = int.parse(hour);
-    if (intHour >= 00 && intHour <= 10) {
-      welcome = 'Good Morning';
-    } else if (intHour >= 11 && intHour <= 14) {
-      welcome = 'Good Afternoon';
-    } else if (intHour >= 15 && intHour <= 18) {
-      welcome = 'Good Afternoon';
-    } else if (intHour >= 19 && intHour <= 23) {
-      welcome = 'Good Night';
-    }
 
-    // GET DATA TOTAL KWH
-    DatabaseReference totalKwh = FirebaseDatabase.instance
-        .ref('buildings/rumah/sensors/realtime/energy/');
-    totalKwh.onValue.listen((event) {
-      kwhTot = event.snapshot.value;
+    // RUN SEKALI SAAT APK DI BUKA
+    Timer(Duration(seconds: 0), () {
+      // DATE TIME
+      hour = dateFormat.format(now);
+      var intHour = int.parse(hour);
+      if (intHour >= 00 && intHour <= 10) {
+        welcome = 'Good Morning';
+      } else if (intHour >= 11 && intHour <= 14) {
+        welcome = 'Good Afternoon';
+      } else if (intHour >= 15 && intHour <= 18) {
+        welcome = 'Good Afternoon';
+      } else if (intHour >= 19 && intHour <= 23) {
+        welcome = 'Good Night';
+      }
+
+      // GET DATA TOTAL KWH
+      DatabaseReference totalKwh = FirebaseDatabase.instance
+          .ref('buildings/rumah/sensors/usage/thisMonth/');
+      totalKwh.onValue.listen((event) {
+        kwhTot = event.snapshot.value;
+        // print('sekali');
+      });
+
+      // GET DATA TOTAL KWH
+      DatabaseReference totalkwhRef = FirebaseDatabase.instance
+          .ref('buildings/building1/sensors/usage/thisMonth/');
+      totalkwhRef.onValue.listen((event) {
+        totalkwhB1 = event.snapshot.value;
+        String stringData = jsonEncode(totalkwhB1);
+        Map valuemapb1 = jsonDecode(stringData);
+        b1pzem012 =
+            valuemapb1['pzem0'] + valuemapb1['pzem1'] + valuemapb1['pzem2'];
+        // print(b1pzem012);
+      });
+    });
+
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      //waktu update home
+      DatabaseReference timeRef = FirebaseDatabase.instance
+          .ref('buildings/rumah/sensors/realtime/time');
+      timeRef.onValue.listen((event) {
+        waktu = event.snapshot.value;
+      });
+
+      // timestamp b1
+      DatabaseReference timeB1ref =
+          db.ref('buildings/building1/sensors/realtime/timeR');
+      timeB1ref.onValue.listen((event) {
+        timestampB1 = event.snapshot.value;
+        // print(timestampB1);
+      });
     });
 
     //get data push kwh
@@ -203,14 +244,14 @@ class _HomePageState extends State<HomePage> {
                           SensorStatus.fromJson(json.decode(stringData));
 
                       // timestamp Home
-                      var timeH = DateTime.fromMillisecondsSinceEpoch(
-                          sensorStatus.hTime! * 1000);
+                      var timeH =
+                          DateTime.fromMillisecondsSinceEpoch(waktu * 1000);
                       String hJam = DateFormat.Hm().format(timeH).toString();
                       String hDate = DateFormat.yMd().format(timeH).toString();
 
                       // timestamp B1
                       var timeB1 = DateTime.fromMillisecondsSinceEpoch(
-                          sensorStatus.b1Time! * 1000);
+                          timestampB1 * 1000);
                       String b1Jam = DateFormat.Hm().format(timeB1).toString();
                       String b1Date =
                           DateFormat.yMd().format(timeB1).toString();
@@ -263,7 +304,7 @@ class _HomePageState extends State<HomePage> {
 
                       List totalEnergyList = [
                         (kwhTot),
-                        (sensorStatus.b1TotalEnergy),
+                        b1pzem012,
                         (sensorStatus.b2TotalEnergy),
                         (sensorStatus.b3TotalEnergy),
                         (sensorStatus.b4TotalEnergy),
@@ -272,7 +313,7 @@ class _HomePageState extends State<HomePage> {
 
                       List hargaList = [
                         (kwhTot * harga),
-                        (sensorStatus.b1TotalEnergy / 100) * harga,
+                        (b1pzem012 * harga),
                         (sensorStatus.b2TotalEnergy / 100) * harga,
                         (sensorStatus.b3TotalEnergy / 100) * harga,
                         (sensorStatus.b4TotalEnergy / 100) * harga,
@@ -292,9 +333,9 @@ class _HomePageState extends State<HomePage> {
                                   sensorState: pzemStatList[index],
                                   todayEnergy:
                                       totalEnergyList[index].toStringAsFixed(2),
-                                  thisMonthEnergy: '0.0',
+                                  lastMonth: '0.0',
                                   lastUpdate: sensorStatList[index],
-                                  harga: hargaList[index].toStringAsFixed(2),
+                                  harga: hargaList[index].toStringAsFixed(0),
                                 );
                               }),
                         ),
@@ -313,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                                   hardwareState: statusCard[index][0],
                                   sensorState: 'null',
                                   todayEnergy: 'null',
-                                  thisMonthEnergy: 'null',
+                                  lastMonth: 'null',
                                   lastUpdate: 'null',
                                   harga: 'null',
                                 );
@@ -342,7 +383,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HistoryPage(),
+                          builder: (context) => const HistoryPage(),
                         ),
                       );
                     },
@@ -374,14 +415,23 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: TabBar(
+                  indicator: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white60,
+                    borderRadius: BorderRadius.circular(8),
+                    // border: Border.all(
+                    //   color: Colors.grey.shade400,
+                    //   width: 1,
+                    // ),
+                  ),
                   isScrollable: true,
-                  labelColor: Colors.black,
+                  labelColor: Colors.grey[900],
                   unselectedLabelColor: Colors.grey,
                   indicatorColor: Colors.black,
-                  tabs: [
+                  tabs: const [
                     Tab(
                       child: Text('Home'),
                     ),
@@ -403,14 +453,14 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Expanded(
+              const Expanded(
                 child: TabBarView(children: [
-                  const TabRumah(),
+                  TabRumah(),
                   TabSalmon(),
-                  const TabTik(),
-                  const TabUtama(),
-                  const TabCakalang(),
-                  const TabKakap(),
+                  TabTik(),
+                  TabUtama(),
+                  TabCakalang(),
+                  TabKakap(),
                 ]),
               )
             ],

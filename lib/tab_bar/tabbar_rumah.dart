@@ -24,14 +24,7 @@ class _TabRumahState extends State<TabRumah> {
     ['Freq', 'lib/icons/freq.png', '0 Hz'],
   ];
 
-  List satuanSensor = [
-    ' V',
-    ' A',
-    ' W',
-    ' kWh',
-    '',
-    ' Hz',
-  ];
+  List satuanSensor = [' V', ' A', ' W', ' kWh', '', ' Hz'];
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +54,6 @@ class _TabRumahState extends State<TabRumah> {
             ];
 
             // Sensor Value From database
-            List powerRumahValue = [
-              '${energyModel.voltage} V',
-              '${energyModel.current} A',
-              '${energyModel.power} w',
-              '${energyModel.energy} kWh',
-              '${energyModel.cosphi}',
-              '${energyModel.freq} Hz',
-            ];
             return GridView.builder(
                 itemCount: sensorComponent.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
