@@ -3,17 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
 class SensorsCardStatus extends StatelessWidget {
-  String buildingsName,
-      hardwareState,
-      sensorState,
-      todayEnergy,
-      lastMonth,
-      lastUpdate,
-      harga;
+  String buildingsName, sensorState, todayEnergy, lastMonth, lastUpdate, harga;
 
   SensorsCardStatus({
     required this.buildingsName,
-    required this.hardwareState,
     required this.sensorState,
     required this.todayEnergy,
     required this.lastMonth,
@@ -73,14 +66,7 @@ class SensorsCardStatus extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            '$buildingsName | ',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            hardwareState,
+                            buildingsName,
                             style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 14,

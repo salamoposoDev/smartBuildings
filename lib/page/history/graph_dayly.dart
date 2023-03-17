@@ -1,154 +1,150 @@
 import 'dart:convert';
-
-import 'package:d_chart/d_chart.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:smartbuilding/page/history/bar%20graph%20day/bar_graph.dart';
 
-class DayGraph extends StatefulWidget {
-  const DayGraph({super.key});
+class HourGraph extends StatefulWidget {
+  const HourGraph({super.key});
 
   @override
-  State<DayGraph> createState() => _DayGraphState();
+  State<HourGraph> createState() => _HourGraphState();
 }
 
-class _DayGraphState extends State<DayGraph> {
-  DateTime dateTime = DateTime.now();
-  String? monthNow;
-  String? dateNow;
-  final DateTime now = DateTime.now();
-  final DateFormat dateFormat = DateFormat.H();
+class _HourGraphState extends State<HourGraph> {
+  List pilih = [
+    '1',
+    '2',
+    '3',
+  ];
+  String today = DateTime.now().day.toString();
+  String bulanini = DateTime.now().month.toString();
+  String tahunini = DateTime.now().year.toString();
+
   @override
   Widget build(BuildContext context) {
-    dateNow = DateFormat.yMMMd().format(now);
-    //get bulan ini
-    monthNow = DateTime.now().month.toString();
-
     Query dbref =
-        FirebaseDatabase.instance.ref('buildings/rumah/sensors/history/dayly/');
+        FirebaseDatabase.instance.ref('buildings/rumah/sensors/history/hour/');
     Query query =
-        FirebaseDatabase.instance.ref('buildings/rumah/sensors/history/dayly/');
+        FirebaseDatabase.instance.ref('buildings/rumah/sensors/history/hour/');
+    // print(query);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CupertinoButton(
-          child: Row(
-            children: [
-              Text(
-                '${dateTime.year.toString() + '/'}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[900],
-                ),
-              ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey[900],
-              ),
-            ],
-          ),
-          onPressed: () {
-            showCupertinoModalPopup(
-              context: context,
-              builder: (context) => SizedBox(
-                height: 250,
-                child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: dateTime,
-                    use24hFormat: true,
-                    backgroundColor: Colors.white,
-                    onDateTimeChanged: (DateTime newTime) {
-                      setState(() {
-                        dateTime = newTime;
-                        print(newTime);
-                      });
-                    }),
-              ),
-            );
-          },
-        ),
         StreamBuilder(
-          stream: dbref.orderByChild('waktu').equalTo('11/3/2023').onValue,
+          stream: dbref
+              .orderByChild('waktu')
+              .equalTo('$today/$bulanini/$tahunini')
+              .onValue,
           builder: (context, snap) {
             if (snap.hasData &&
                 !snap.hasError &&
                 snap.data?.snapshot.value != null) {
-              String jsonString = jsonEncode(snap.data?.snapshot.value);
-              Map<dynamic, dynamic> list = jsonDecode(jsonString);
-              List<dynamic> datalist = [];
-              datalist = list.values.toList();
-              // print(datalist[0]['energy']);
-              print(list);
+              String jsonSring = jsonEncode(snap.data?.snapshot.value);
+              Map<dynamic, dynamic> mapData = jsonDecode(jsonSring);
+              List<dynamic> list = [];
+              list = mapData.values.toList();
 
               List<Map<String, dynamic>> datavolt = [];
-              List<Map<String, dynamic>>? datavoltReverse = [];
+              List enamJamTerakhir = ['0', '1', '2', '3', '4', '5'];
+              List valueJamTerakhir = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
 
-              int waktu;
+              String waktu;
               dynamic energy;
-
-              String hari, bulan;
-              List daylyData = [
-                0.0, // Mond 0
-                0.0, // selasa 1
-                0.0, // rabu 2
-                0.0, // kamis 3
-                0.0, // jumat 4
-                0.0, // sabtu 5
-                0.0, // minggu 6
-              ];
-
-              for (var i = 0; i < datalist.length; i++) {
-                waktu = datalist[i]['timestamp'];
-                energy = datalist[i]['energy'];
-                var timeH = DateTime.fromMillisecondsSinceEpoch(waktu * 1000);
-                hari = DateFormat.d().format(timeH).toString();
-                bulan = DateFormat.M().format(timeH).toString();
-
-                datavolt.add({'time': hari, 'energy': energy});
-                // cek data di bulan ini
-                if (bulan == DateTime.now().month.toString()) {
-                  switch (hari) {
-                    case '9':
-                      // print('Tru');
-                      daylyData.insert(3, energy);
-                      break;
-                    case '10':
-                      // print('Fri');
-                      daylyData.insert(4, energy);
-                      break;
-                    case '11':
-                      // print('Sat');
-                      daylyData.insert(5, energy);
-                      break;
-                    case '12':
-                      // print('Sun');
-                      daylyData.insert(6, energy);
-                      break;
-                    default:
-                  }
+              list.reversed;
+              // print(list);
+              if (list.length > 6) {
+                for (var i = 0; i <= 5; i++) {
+                  waktu = list[i]['jam'];
+                  energy = list[i]['energy'];
+                  datavolt.add({'time': waktu, 'energy': energy});
+                  valueJamTerakhir.insert(i, energy);
+                  enamJamTerakhir.insert(i, waktu);
                 }
-
-                // daylyData.add({energy, day});
+                // print(datavolt.reversed);
               }
-              print(daylyData);
+
+              List<Map<String, dynamic>> datachart = [];
+              if (datavolt.length > 6) {
+                // datavolt.reversed;
+
+                for (var a = 0; a <= 6; a++) {
+                  String t = datavolt[a]['time'];
+                  dynamic en = datavolt[a]['energy'];
+                  datachart.add({'time': t, 'energy': en});
+                }
+              }
 
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(dateNow.toString()),
-                  BarGraphDay(
-                    monAmount: daylyData[0],
-                    tuAmount: daylyData[1],
-                    wedAmount: daylyData[2],
-                    thuAmount: daylyData[3],
-                    friAmount: daylyData[4],
-                    satAmount: daylyData[5],
-                    sunAmount: daylyData[6],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: DropdownButton(
+                      hint: const Text(
+                        'Pilih Jam',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      items: const [
+                        DropdownMenuItem<String>(
+                          value: '1',
+                          child: Text('1'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '2',
+                          child: Text('2'),
+                        ),
+                        DropdownMenuItem<String>(
+                          value: '3',
+                          child: Text('3'),
+                        ),
+                      ],
+                      onChanged: (String? newValue) {},
+                    ),
                   ),
+                  BarGraphDay(
+                    jam0: enamJamTerakhir[0],
+                    jam1: enamJamTerakhir[1],
+                    jam2: enamJamTerakhir[2],
+                    jam3: enamJamTerakhir[3],
+                    jam4: enamJamTerakhir[4],
+                    jam5: enamJamTerakhir[5],
+                    monAmount: valueJamTerakhir[0],
+                    tuAmount: valueJamTerakhir[1],
+                    wedAmount: valueJamTerakhir[2],
+                    thuAmount: valueJamTerakhir[3],
+                    friAmount: valueJamTerakhir[4],
+                    satAmount: valueJamTerakhir[5],
+                  ),
+                  // AspectRatio(
+                  //   aspectRatio: 16 / 9,
+                  //   child: DChartBar(
+                  //     animationDuration: const Duration(seconds: 1),
+                  //     yAxisTitle: 'kWh',
+                  //     data: [
+                  //       {
+                  //         'id': 'Bar',
+                  //         'data': datavolt.map((e) {
+                  //           return {
+                  //             'domain': e['time'],
+                  //             'measure': e['energy']
+                  //           };
+                  //         }).toList(),
+                  //       },
+                  //     ],
+                  //     domainLabelPaddingToAxisLine: 16,
+                  //     axisLineTick: 2,
+                  //     axisLinePointTick: 2,
+                  //     axisLinePointWidth: 10,
+                  //     axisLineColor: Colors.grey[700],
+                  //     measureLabelPaddingToAxisLine: 16,
+                  //     barColor: (barData, index, id) => Colors.grey.shade800,
+                  //     showBarValue: true,
+                  //   ),
+                  // ),
                 ],
               );
             } else {
@@ -166,15 +162,37 @@ class _DayGraphState extends State<DayGraph> {
           height: 10,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-          child: Text('Energy Per Day'),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Energy'),
+              DropdownButton(
+                hint: const Text(
+                  'Pilih Jam',
+                  style: TextStyle(fontSize: 14),
+                ),
+                borderRadius: BorderRadius.circular(10),
+                items: const [
+                  DropdownMenuItem<String>(
+                    value: 'sala',
+                    child: Text('sala'),
+                  ),
+                ],
+                onChanged: (String? newValue) {},
+              )
+            ],
+          ),
         ),
         Expanded(
           child: FirebaseAnimatedList(
-            reverse: false,
-            query: query,
+            reverse: true,
+            query: query
+                .orderByChild('waktu')
+                .equalTo('$today/$bulanini/$tahunini'),
             itemBuilder: (context, snapshot, animation, index) {
               Map data = snapshot.value as Map;
+
               // print(data);
               return Padding(
                 padding: const EdgeInsets.all(8.0),

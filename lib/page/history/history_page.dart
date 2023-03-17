@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smartbuilding/page/history/grap_year.dart';
+import 'package:smartbuilding/page/history/graph_weekly.dart';
 import 'package:smartbuilding/page/history/graph_dayly.dart';
-import 'package:smartbuilding/page/history/graph_hour.dart';
 import 'package:smartbuilding/page/history/graph_monthly.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -30,6 +30,7 @@ class _HistoryPageState extends State<HistoryPage> {
               height: 10,
             ),
             TabBar(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
               labelColor: Colors.grey[800],
               unselectedLabelColor: Colors.grey,
               indicator: BoxDecoration(
@@ -41,7 +42,7 @@ class _HistoryPageState extends State<HistoryPage> {
               tabs: [
                 Tab(
                   child: Text(
-                    'Hour',
+                    'Day',
                     style: GoogleFonts.lato(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -50,7 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
                 Tab(
                   child: Text(
-                    'Day',
+                    'Week',
                     style: GoogleFonts.lato(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,

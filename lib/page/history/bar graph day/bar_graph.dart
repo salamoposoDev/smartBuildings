@@ -1,6 +1,7 @@
 import 'package:d_chart/d_chart.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class BarGraphDay extends StatelessWidget {
   double monAmount;
   double tuAmount;
@@ -8,33 +9,39 @@ class BarGraphDay extends StatelessWidget {
   double thuAmount;
   double friAmount;
   double satAmount;
-  double sunAmount;
+
+  String jam0, jam1, jam2, jam3, jam4, jam5;
 
   BarGraphDay({
     super.key,
+    required this.jam0,
+    required this.jam1,
+    required this.jam2,
+    required this.jam3,
+    required this.jam4,
+    required this.jam5,
     required this.monAmount,
     required this.tuAmount,
     required this.wedAmount,
     required this.thuAmount,
     required this.friAmount,
     required this.satAmount,
-    required this.sunAmount,
   });
 
   @override
   Widget build(BuildContext context) {
     // list of data
-    List<Map<String, dynamic>> datasaya = [
-      {'time': 'Mon', 'energy': 4.3},
-      {'time': 'Tu', 'energy': 3.2},
-      {'time': 'Wed', 'energy': 4.2},
-      {'time': 'Tru', 'energy': 7.2},
-      {'time': 'Fri', 'energy': 8.2},
-      {'time': 'Sat', 'energy': 7.2},
-      {'time': 'Sun', 'energy': 4.2},
-    ];
+    // List<Map<String, dynamic>> datasaya = [
+    //   {'time': 'Mon', 'energy': 4.3},
+    //   {'time': 'Tu', 'energy': 3.2},
+    //   {'time': 'Wed', 'energy': 4.2},
+    //   {'time': 'Tru', 'energy': 7.2},
+    //   {'time': 'Fri', 'energy': 8.2},
+    //   {'time': 'Sat', 'energy': 7.2},
+    //   {'time': 'Sun', 'energy': 4.2},
+    // ];
 
-    double senAmount = 3.2;
+    // double senAmount = 3.2;
 
     return AspectRatio(
       aspectRatio: 16 / 9,
@@ -52,13 +59,12 @@ class BarGraphDay extends StatelessWidget {
           {
             'id': 'Bar',
             'data': [
-              {'domain': 'Mon', 'measure': monAmount},
-              {'domain': 'Tu', 'measure': tuAmount},
-              {'domain': 'Wed', 'measure': wedAmount},
-              {'domain': 'Thu', 'measure': thuAmount},
-              {'domain': 'Fri', 'measure': friAmount},
-              {'domain': 'Sat', 'measure': satAmount},
-              {'domain': 'Sun', 'measure': sunAmount},
+              {'domain': jam0, 'measure': monAmount},
+              {'domain': jam1, 'measure': tuAmount},
+              {'domain': jam2, 'measure': wedAmount},
+              {'domain': jam3, 'measure': thuAmount},
+              {'domain': jam4, 'measure': friAmount},
+              {'domain': jam5, 'measure': satAmount},
             ],
           },
         ],

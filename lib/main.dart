@@ -1,10 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:smartbuilding/page/home/home_page.dart';
 
 import 'firebase_options.dart';
 
 void main() async {
+  //hive
+  await Hive.initFlutter();
+  // open box
+  var box = Hive.openBox('myBox');
+  // firebase
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

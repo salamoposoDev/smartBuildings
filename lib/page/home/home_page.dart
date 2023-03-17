@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:smartbuilding/component/sensors_card_status.dart';
 import 'package:smartbuilding/model/status_sensors.dart';
 import 'package:smartbuilding/page/history/history_page.dart';
+import 'package:smartbuilding/page/record_data/record_data_page.dart';
 import 'package:smartbuilding/tab_bar/tabbar_cakalang.dart';
 import 'package:smartbuilding/tab_bar/tabbar_kakap.dart';
 import 'package:smartbuilding/tab_bar/tabbar_rumah.dart';
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   List statusCard = [
     // building, hardwareState, SensorState
     ['Home', 'Online', 'Connected'],
-    ['Salmon', 'Offline', 'Disconnected'],
+    ['Gedung Utama', 'Offline', 'Disconnected'],
     ['TIK', 'Offline', 'Disconnected'],
     ['Utama', 'Offline', 'Disconnected'],
     ['Kakap', 'Offline', 'Disconnected'],
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     dateNow = DateFormat.yMMMd().format(now);
 
     // RUN SEKALI SAAT APK DI BUKA
-    Timer(Duration(seconds: 0), () {
+    Timer(const Duration(seconds: 0), () {
       // DATE TIME
       hour = dateFormat.format(now);
       var intHour = int.parse(hour);
@@ -89,7 +90,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 5), (timer) {
       //waktu update home
       DatabaseReference timeRef = FirebaseDatabase.instance
           .ref('buildings/rumah/sensors/realtime/time');
@@ -328,8 +329,7 @@ class _HomePageState extends State<HomePage> {
                               itemCount: statusCard.length,
                               itemBuilder: (context, index) {
                                 return SensorsCardStatus(
-                                  buildingsName: 'Device',
-                                  hardwareState: statusCard[index][0],
+                                  buildingsName: statusCard[index][0],
                                   sensorState: pzemStatList[index],
                                   todayEnergy:
                                       totalEnergyList[index].toStringAsFixed(2),
@@ -351,7 +351,6 @@ class _HomePageState extends State<HomePage> {
                               itemBuilder: (context, index) {
                                 return SensorsCardStatus(
                                   buildingsName: 'Devices',
-                                  hardwareState: statusCard[index][0],
                                   sensorState: 'null',
                                   todayEnergy: 'null',
                                   lastMonth: 'null',
@@ -367,14 +366,23 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Text(
-                      'All Buildings',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RecordDataPage(),
+                            ));
+                      },
+                      child: const Text(
+                        'Record Data',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -416,7 +424,7 @@ class _HomePageState extends State<HomePage> {
               ),
 
               Padding(
-                padding: EdgeInsets.only(left: 10.0),
+                padding: const EdgeInsets.only(left: 10.0),
                 child: TabBar(
                   indicator: BoxDecoration(
                     shape: BoxShape.rectangle,

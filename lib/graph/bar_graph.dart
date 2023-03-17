@@ -91,6 +91,6 @@ class MyBarGraph extends StatelessWidget {
         text = const Text('', style: style);
         break;
     }
-    return SideTitleWidget(child: text, axisSide: meta.axisSide);
+    return SideTitleWidget(axisSide: meta.axisSide, child: text);
   }
 }
