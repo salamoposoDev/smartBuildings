@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -27,7 +26,7 @@ class _MyWidgetState extends State<DataSreen> {
     final dataPushRef = database.ref('buildings/recordData/data');
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[350],
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.grey[700],
@@ -63,17 +62,17 @@ class _MyWidgetState extends State<DataSreen> {
                 }
 
                 // menghitung rata" arus dan cosphi
-
                 double rataArus =
                     arusList.reduce((a, b) => a + b) / arusList.length;
                 double arusTerendah = arusList.reduce((a, b) => a < b ? a : b);
                 double arusTertinggi = arusList.reduce((a, b) => a > b ? a : b);
+                // cosphi
                 double rataCosphi =
                     cosphiList.reduce((a, b) => a + b) / cosphiList.length;
                 double pfTertinggi = cosphiList.reduce((a, b) => a > b ? a : b);
                 double pfTerendah = cosphiList.reduce((a, b) => a < b ? a : b);
 
-                print('tertinggi $arusTertinggi, Terendah $arusTerendah');
+                // print('tertinggi $arusTertinggi, Terendah $arusTerendah');
 
                 // print(list.length);
                 if (data.isNotEmpty) {
@@ -84,44 +83,78 @@ class _MyWidgetState extends State<DataSreen> {
                             horizontal: 10, vertical: 10),
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Current Av= ${rataArus.toStringAsFixed(2)} A',
-                                  style: GoogleFonts.bebasNeue(
-                                    fontSize: 20,
-                                    color: Colors.grey[900],
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.blueGrey,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'I Av= ${rataArus.toStringAsFixed(2)} A',
+                                            style: GoogleFonts.bebasNeue(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            'I  Max= ${arusTertinggi.toStringAsFixed(2)} A',
+                                            style: GoogleFonts.bebasNeue(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            'I  Min= ${arusTerendah.toStringAsFixed(2)} A',
+                                            style: GoogleFonts.bebasNeue(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // cosphi
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'pf Av= ${rataCosphi.toStringAsFixed(2)}',
+                                            style: GoogleFonts.bebasNeue(
+                                              fontSize: 20,
+                                              color: const Color.fromRGBO(
+                                                  255, 255, 255, 1),
+                                            ),
+                                          ),
+                                          Text(
+                                            'pf  Max= ${pfTertinggi.toStringAsFixed(2)}',
+                                            style: GoogleFonts.bebasNeue(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            'pf  Min= ${pfTerendah.toStringAsFixed(2)}',
+                                            style: GoogleFonts.bebasNeue(
+                                              fontSize: 20,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Text(
-                                  'Cosphi Av= ${rataCosphi.toStringAsFixed(2)}',
-                                  style: GoogleFonts.bebasNeue(
-                                    fontSize: 20,
-                                    color: Colors.grey[900],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // tertinggi dan terendah
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Max I= ${arusTertinggi.toStringAsFixed(2)} A',
-                                  style: GoogleFonts.bebasNeue(
-                                    fontSize: 20,
-                                    color: Colors.grey[900],
-                                  ),
-                                ),
-                                Text(
-                                  'Max pf= ${pfTertinggi.toStringAsFixed(2)}',
-                                  style: GoogleFonts.bebasNeue(
-                                    fontSize: 20,
-                                    color: Colors.grey[900],
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -133,32 +166,38 @@ class _MyWidgetState extends State<DataSreen> {
                           itemCount: list.length,
                           itemBuilder: (context, index) {
                             return Container(
-                              margin: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[700],
-                                borderRadius: BorderRadius.circular(5),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
                               ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 18.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text(
-                                      'Current  ${list[index]['current']}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 18.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          'Current  ${list[index]['current']} A',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Cosphi ${list[index]['cosphi']}',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      'Cosphi ${list[index]['cosphi']}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  const Divider(
+                                    height: 2,
+                                    thickness: 1,
+                                  )
+                                ],
                               ),
                             );
                           }),

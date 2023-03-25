@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'package:d_chart/d_chart.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:smartbuilding/page/history/bar%20graph%20day/bar_graph.dart';
 
 class HourGraph extends StatefulWidget {
   const HourGraph({super.key});
@@ -56,14 +56,14 @@ class _HourGraphState extends State<HourGraph> {
               list.reversed;
               // print(list);
               if (list.length > 6) {
-                for (var i = 0; i <= 5; i++) {
+                for (var i = 0; i <= list.length - 1; i++) {
                   waktu = list[i]['jam'];
                   energy = list[i]['energy'];
                   datavolt.add({'time': waktu, 'energy': energy});
                   valueJamTerakhir.insert(i, energy);
                   enamJamTerakhir.insert(i, waktu);
                 }
-                // print(datavolt.reversed);
+                // print(list);
               }
 
               List<Map<String, dynamic>> datachart = [];
@@ -105,46 +105,32 @@ class _HourGraphState extends State<HourGraph> {
                       onChanged: (String? newValue) {},
                     ),
                   ),
-                  BarGraphDay(
-                    jam0: enamJamTerakhir[0],
-                    jam1: enamJamTerakhir[1],
-                    jam2: enamJamTerakhir[2],
-                    jam3: enamJamTerakhir[3],
-                    jam4: enamJamTerakhir[4],
-                    jam5: enamJamTerakhir[5],
-                    monAmount: valueJamTerakhir[0],
-                    tuAmount: valueJamTerakhir[1],
-                    wedAmount: valueJamTerakhir[2],
-                    thuAmount: valueJamTerakhir[3],
-                    friAmount: valueJamTerakhir[4],
-                    satAmount: valueJamTerakhir[5],
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: DChartBar(
+                      animationDuration: const Duration(seconds: 1),
+                      yAxisTitle: 'kWh',
+                      data: [
+                        {
+                          'id': 'Bar',
+                          'data': datavolt.map((e) {
+                            return {
+                              'domain': e['time'],
+                              'measure': e['energy']
+                            };
+                          }).toList(),
+                        },
+                      ],
+                      domainLabelPaddingToAxisLine: 16,
+                      axisLineTick: 2,
+                      axisLinePointTick: 2,
+                      axisLinePointWidth: 10,
+                      axisLineColor: Colors.grey[700],
+                      measureLabelPaddingToAxisLine: 16,
+                      barColor: (barData, index, id) => Colors.grey.shade800,
+                      showBarValue: true,
+                    ),
                   ),
-                  // AspectRatio(
-                  //   aspectRatio: 16 / 9,
-                  //   child: DChartBar(
-                  //     animationDuration: const Duration(seconds: 1),
-                  //     yAxisTitle: 'kWh',
-                  //     data: [
-                  //       {
-                  //         'id': 'Bar',
-                  //         'data': datavolt.map((e) {
-                  //           return {
-                  //             'domain': e['time'],
-                  //             'measure': e['energy']
-                  //           };
-                  //         }).toList(),
-                  //       },
-                  //     ],
-                  //     domainLabelPaddingToAxisLine: 16,
-                  //     axisLineTick: 2,
-                  //     axisLinePointTick: 2,
-                  //     axisLinePointWidth: 10,
-                  //     axisLineColor: Colors.grey[700],
-                  //     measureLabelPaddingToAxisLine: 16,
-                  //     barColor: (barData, index, id) => Colors.grey.shade800,
-                  //     showBarValue: true,
-                  //   ),
-                  // ),
                 ],
               );
             } else {

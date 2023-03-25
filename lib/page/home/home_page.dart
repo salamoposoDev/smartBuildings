@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -122,7 +123,7 @@ class _HomePageState extends State<HomePage> {
         FirebaseDatabase.instance.ref('buildingStat');
 
     return DefaultTabController(
-      length: 6,
+      length: 2,
       child: Scaffold(
         backgroundColor: Colors.grey[300],
         body: SafeArea(
@@ -425,50 +426,39 @@ class _HomePageState extends State<HomePage> {
 
               Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: TabBar(
-                  indicator: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.white60,
-                    borderRadius: BorderRadius.circular(8),
-                    // border: Border.all(
-                    //   color: Colors.grey.shade400,
-                    //   width: 1,
-                    // ),
-                  ),
-                  isScrollable: true,
-                  labelColor: Colors.grey[900],
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: Colors.black,
-                  tabs: const [
-                    Tab(
-                      child: Text('Home'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TabBar(
+                      indicator: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Colors.white60,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.grey.shade400,
+                          width: 1,
+                        ),
+                      ),
+                      isScrollable: true,
+                      labelColor: Colors.grey[900],
+                      unselectedLabelColor: Colors.grey,
+                      indicatorColor: Colors.black,
+                      tabs: const [
+                        Tab(
+                          child: Text('Home'),
+                        ),
+                        Tab(
+                          child: Text('Building 1'),
+                        ),
+                      ],
                     ),
-                    Tab(
-                      child: Text('Building 1'),
-                    ),
-                    Tab(
-                      child: Text('Building 2'),
-                    ),
-                    Tab(
-                      child: Text('Building 3'),
-                    ),
-                    Tab(
-                      child: Text('Building 4'),
-                    ),
-                    Tab(
-                      child: Text('Building 5'),
-                    )
                   ],
                 ),
               ),
-              const Expanded(
+              Expanded(
                 child: TabBarView(children: [
                   TabRumah(),
                   TabSalmon(),
-                  TabTik(),
-                  TabUtama(),
-                  TabCakalang(),
-                  TabKakap(),
                 ]),
               )
             ],

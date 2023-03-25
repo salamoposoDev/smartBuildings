@@ -8,7 +8,6 @@ import 'package:smartbuilding/page/record_data/data.dart';
 
 class RecordDataPage extends StatefulWidget {
   const RecordDataPage({super.key});
-
   @override
   State<RecordDataPage> createState() => _MyWidgetState();
 }
@@ -155,13 +154,27 @@ class _MyWidgetState extends State<RecordDataPage> {
           // List<dynamic> child = [];
           // child = data.toList();
           // print(child);
-          Map delete = snapshot.value as Map;
-          delete['key'] = snapshot.key;
+          Map dataKey = snapshot.value as Map;
+          dataKey['key'] = snapshot.key;
+          // MAP VALUE DATA
+          Map dataValue = snapshot.value as Map;
           // print(delete['key']);
-          String data = snapshot.key.toString();
+
+          // GET KEY
+          String stringKey = snapshot.key.toString();
+          // LIST VALUES
           List<dynamic> list = [];
-          list.add(data);
-          // print(list);
+
+          list = dataValue.values.toList();
+          // buat list untuk arus dan cosphi
+          List<double> arusList = [];
+          List<double> cosphiList = [];
+          // tampung data arus ke dalam list
+          for (var i = 0; i < list.length - 1; i++) {
+            arusList.add(list[i]['current']);
+            cosphiList.add(list[i]['cosphi']);
+          }
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Slidable(
@@ -174,7 +187,7 @@ class _MyWidgetState extends State<RecordDataPage> {
                     foregroundColor: Colors.white,
                     icon: Icons.delete,
                     onPressed: (contex) {
-                      dataPushRef.child(delete['key']).remove();
+                      dataPushRef.child(dataKey['key']).remove();
                     },
                   ),
                 ],
@@ -184,30 +197,33 @@ class _MyWidgetState extends State<RecordDataPage> {
                   color: Colors.grey[700],
                   borderRadius: BorderRadius.circular(8),
                 ),
+                // route to Detail page
                 child: ListTile(
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
+                  trailing: InkWell(
+                    splashColor: Colors.blue,
+                    onTap: () {
+                      _myBox.put(1, dataKey['key']);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DataSreen(),
+                        ),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
                   ),
                   textColor: Colors.white,
                   title: Text(
-                    data.toString(),
+                    stringKey.toString(),
                     style: GoogleFonts.bebasNeue(fontSize: 19),
                   ),
                   subtitle: Text(
-                    "Data length, ${snapshot.children.length}",
+                    "Data length ${snapshot.children.length}",
                     style: GoogleFonts.lato(fontSize: 14),
                   ),
-                  onTap: () {
-                    // print(delete['key']);
-                    _myBox.put(1, delete['key']);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DataSreen(),
-                      ),
-                    );
-                  },
                 ),
               ),
             ),

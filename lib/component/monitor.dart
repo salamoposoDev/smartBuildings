@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
-class Monitor extends StatefulWidget {
+class Monitor extends StatelessWidget {
   String sensorName;
   String sensorIcon;
   String sensorValue;
@@ -15,11 +15,6 @@ class Monitor extends StatefulWidget {
     required this.sensorValue,
   });
 
-  @override
-  State<Monitor> createState() => _MonitorState();
-}
-
-class _MonitorState extends State<Monitor> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,14 +35,14 @@ class _MonitorState extends State<Monitor> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.sensorValue,
+                  sensorValue,
                   style: GoogleFonts.bebasNeue(
                     color: Colors.white,
                     fontSize: 30,
                   ),
                 ),
                 Text(
-                  widget.satuan,
+                  satuan,
                   style:
                       GoogleFonts.bebasNeue(color: Colors.white, fontSize: 28),
                 ),
@@ -57,14 +52,14 @@ class _MonitorState extends State<Monitor> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  widget.sensorName,
+                  sensorName,
                   style: GoogleFonts.lato(
                     fontSize: 18,
                     color: Colors.white,
                   ),
                 ),
                 Image.asset(
-                  widget.sensorIcon,
+                  sensorIcon,
                   height: 40,
                   color: Colors.white,
                 ),

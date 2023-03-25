@@ -26,6 +26,7 @@ class BarGraphDay extends StatelessWidget {
     required this.thuAmount,
     required this.friAmount,
     required this.satAmount,
+    required sunAmount,
   });
 
   @override
