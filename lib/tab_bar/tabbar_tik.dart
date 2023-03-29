@@ -41,49 +41,53 @@ class _TabTikState extends State<TabTik> {
     //   ];
     // });
 
-    return StreamBuilder(
-      stream: refSensors.onValue,
-      builder: (context, snap) {
-        if (snap.hasData &&
-            !snap.hasError &&
-            snap.data?.snapshot.value != null) {
-          String stringData = jsonEncode(snap.data?.snapshot.value);
-          Test test = Test.fromMap(json.decode(stringData));
-          List<String> listValue = [
-            '${test.voltage} V',
-            '${test.current} A',
-            '${test.power} W',
-            '${test.energy} kWh',
-            '${test.cosphi}',
-            '${test.freq} hz',
-          ];
-          return GridView.builder(
-              itemCount: sensorComponent.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
-              itemBuilder: (context, index) {
-                return Monitor(
-                  sensorName: sensorComponent[index][0],
-                  sensorIcon: sensorComponent[index][1],
-                  sensorValue: listValue[index],
-                  satuan: 'a',
-                );
-              });
-        } else {
-          return GridView.builder(
-              itemCount: sensorComponent.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
-              itemBuilder: (context, index) {
-                return Monitor(
-                  sensorName: sensorComponent[index][0],
-                  sensorIcon: sensorComponent[index][1],
-                  sensorValue: sensorComponent[index][2],
-                  satuan: 'v',
-                );
-              });
-        }
-      },
+    return Column(
+      children: [
+        StreamBuilder(
+          stream: refSensors.onValue,
+          builder: (context, snap) {
+            if (snap.hasData &&
+                !snap.hasError &&
+                snap.data?.snapshot.value != null) {
+              String stringData = jsonEncode(snap.data?.snapshot.value);
+              Test test = Test.fromMap(json.decode(stringData));
+              List<String> listValue = [
+                '${test.voltage} V',
+                '${test.current} A',
+                '${test.power} W',
+                '${test.energy} kWh',
+                '${test.cosphi}',
+                '${test.freq} hz',
+              ];
+              return GridView.builder(
+                  itemCount: sensorComponent.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: (context, index) {
+                    return Monitor(
+                      sensorName: sensorComponent[index][0],
+                      sensorIcon: sensorComponent[index][1],
+                      sensorValue: listValue[index],
+                      satuan: 'a',
+                    );
+                  });
+            } else {
+              return GridView.builder(
+                  itemCount: sensorComponent.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: (context, index) {
+                    return Monitor(
+                      sensorName: sensorComponent[index][0],
+                      sensorIcon: sensorComponent[index][1],
+                      sensorValue: sensorComponent[index][2],
+                      satuan: 'v',
+                    );
+                  });
+            }
+          },
+        ),
+      ],
     );
   }
 }

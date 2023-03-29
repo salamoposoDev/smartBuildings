@@ -1,4 +1,3 @@
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +30,7 @@ class _MyWidgetState extends State<DataSreen> {
         elevation: 0,
         backgroundColor: Colors.grey[700],
         title: Text(
-          'All Data',
+          'Result',
           style: GoogleFonts.lato(
             fontSize: 18,
             color: Colors.white,
@@ -48,10 +47,12 @@ class _MyWidgetState extends State<DataSreen> {
               query: dataPushRef.orderByKey().equalTo(child),
               itemBuilder: (context, snapshot, animation, index) {
                 Map data = snapshot.value as Map;
-                // buat list untuk arus dan cosphi
-                List<double> arusList = [];
-                List<double> cosphiList = [];
-                // list untuk data arus dan cosphi
+                // buat list untuk arus, cosphi, daya, dan tegangan
+                List<dynamic> arusList = [];
+                List<dynamic> cosphiList = [];
+                List<dynamic> powerList = [];
+                List<dynamic> voltageList = [];
+                // list untuk semua data
                 List<dynamic> list = [];
                 list = data.values.toList();
 
@@ -59,18 +60,36 @@ class _MyWidgetState extends State<DataSreen> {
                 for (var i = 0; i < list.length; i++) {
                   arusList.add(list[i]['current']);
                   cosphiList.add(list[i]['cosphi']);
+                  voltageList.add(list[i]['voltage']);
+                  powerList.add(list[i]['power']);
                 }
 
                 // menghitung rata" arus dan cosphi
-                double rataArus =
+                dynamic rataArus =
                     arusList.reduce((a, b) => a + b) / arusList.length;
-                double arusTerendah = arusList.reduce((a, b) => a < b ? a : b);
-                double arusTertinggi = arusList.reduce((a, b) => a > b ? a : b);
+                dynamic arusTerendah = arusList.reduce((a, b) => a < b ? a : b);
+                dynamic arusTertinggi =
+                    arusList.reduce((a, b) => a > b ? a : b);
                 // cosphi
-                double rataCosphi =
+                dynamic rataCosphi =
                     cosphiList.reduce((a, b) => a + b) / cosphiList.length;
-                double pfTertinggi = cosphiList.reduce((a, b) => a > b ? a : b);
-                double pfTerendah = cosphiList.reduce((a, b) => a < b ? a : b);
+                dynamic pfTertinggi =
+                    cosphiList.reduce((a, b) => a > b ? a : b);
+                dynamic pfTerendah = cosphiList.reduce((a, b) => a < b ? a : b);
+
+                // VOLTAGE
+                var rataVolt =
+                    voltageList.reduce((a, b) => a + b) / voltageList.length;
+                var voltTertinggi = voltageList.reduce((a, b) => a > b ? a : b);
+                var voltTerendah = voltageList.reduce((a, b) => a < b ? a : b);
+
+                // POWER
+                dynamic rataPower =
+                    powerList.reduce((a, b) => a + b) / powerList.length;
+                dynamic powerTertinggi =
+                    powerList.reduce((a, b) => a > b ? a : b);
+                dynamic powerTerendah =
+                    powerList.reduce((a, b) => a < b ? a : b);
 
                 // print('tertinggi $arusTertinggi, Terendah $arusTerendah');
 
@@ -93,60 +112,148 @@ class _MyWidgetState extends State<DataSreen> {
                                 children: [
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceAround,
                                     children: [
+                                      // RATA-RATA
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'I Av= ${rataArus.toStringAsFixed(2)} A',
+                                            'Average',
                                             style: GoogleFonts.bebasNeue(
-                                              fontSize: 20,
                                               color: Colors.white,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+
+                                          // voltage , current, power cosphi
+                                          Text(
+                                            rataVolt.toStringAsFixed(0) + ' V',
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            'I  Max= ${arusTertinggi.toStringAsFixed(2)} A',
-                                            style: GoogleFonts.bebasNeue(
-                                              fontSize: 20,
+                                            '${rataArus.toStringAsFixed(2)} A',
+                                            style: GoogleFonts.roboto(
                                               color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            'I  Min= ${arusTerendah.toStringAsFixed(2)} A',
-                                            style: GoogleFonts.bebasNeue(
-                                              fontSize: 20,
+                                            '${rataPower.toStringAsFixed(2)} W',
+                                            style: GoogleFonts.roboto(
                                               color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            rataCosphi.toStringAsFixed(1),
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      // cosphi
+                                      // MAX VALAUE
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'pf Av= ${rataCosphi.toStringAsFixed(2)}',
+                                            'Max Value',
                                             style: GoogleFonts.bebasNeue(
+                                              color: Colors.white,
                                               fontSize: 20,
-                                              color: const Color.fromRGBO(
-                                                  255, 255, 255, 1),
+                                            ),
+                                          ),
+                                          // voltage , current, power cosphi Max Value
+                                          Text(
+                                            voltTertinggi.toStringAsFixed(0) +
+                                                ' V',
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            'pf  Max= ${pfTertinggi.toStringAsFixed(2)}',
-                                            style: GoogleFonts.bebasNeue(
-                                              fontSize: 20,
+                                            '${arusTertinggi.toStringAsFixed(2)} A',
+                                            style: GoogleFonts.roboto(
                                               color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           Text(
-                                            'pf  Min= ${pfTerendah.toStringAsFixed(2)}',
-                                            style: GoogleFonts.bebasNeue(
-                                              fontSize: 20,
+                                            '${powerTertinggi.toStringAsFixed(2)} W',
+                                            style: GoogleFonts.roboto(
                                               color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            pfTertinggi.toStringAsFixed(1),
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // MIN VALUE
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Min Value',
+                                            style: GoogleFonts.bebasNeue(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          // voltage , current, power cosphi Min Value
+                                          Text(
+                                            voltTerendah.toStringAsFixed(0) +
+                                                ' V',
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${arusTerendah.toStringAsFixed(2)} A',
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${powerTerendah.toStringAsFixed(2)} W',
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            pfTerendah.toStringAsFixed(1),
+                                            style: GoogleFonts.roboto(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ],
@@ -178,17 +285,37 @@ class _MyWidgetState extends State<DataSreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        Text(
-                                          'Current  ${list[index]['current']} A',
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Voltage  ${list[index]['voltage']} V',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Current  ${list[index]['current']} A',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          'Cosphi ${list[index]['cosphi']}',
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Power ${list[index]['power'].toStringAsFixed(2)} W',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Cosphi ${list[index]['cosphi']}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
