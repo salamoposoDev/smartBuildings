@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
@@ -12,8 +14,8 @@ class RealtimeDataBloc extends Bloc<RealtimeDataEvent, RealtimeDataState> {
   RealtimeDataBloc() : super(RealtimeDataInitial()) {
     on<RealtimeDataEvent>((event, emit) async {
       emit(RealtimeDataLoading());
-      final realtimeDataRef = await FirebaseDatabase.instance
-          .ref('buildings/rumah/sensors/realtime');
+      final realtimeDataRef =
+          FirebaseDatabase.instance.ref('buildings/rumah/sensors/realtime');
       realtimeDataRef.onValue.listen((event) async {
         if (event.snapshot.exists) {
           String data = jsonEncode(event.snapshot.value);
