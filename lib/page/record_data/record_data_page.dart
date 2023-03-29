@@ -26,7 +26,7 @@ class _MyWidgetState extends State<RecordDataPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'Record New Data',
+          'Record Data',
           style: GoogleFonts.lato(
             fontSize: 20,
             color: Colors.grey[800],
@@ -157,23 +157,21 @@ class _MyWidgetState extends State<RecordDataPage> {
           Map dataKey = snapshot.value as Map;
           dataKey['key'] = snapshot.key;
           // MAP VALUE DATA
-          Map dataValue = snapshot.value as Map;
-          // print(delete['key']);
-
+          // Map dataValue = snapshot.value as Map;
           // GET KEY
           String stringKey = snapshot.key.toString();
           // LIST VALUES
-          List<dynamic> list = [];
+          // List<dynamic> list = [];
 
-          list = dataValue.values.toList();
-          // buat list untuk arus dan cosphi
-          List<double> arusList = [];
-          List<double> cosphiList = [];
-          // tampung data arus ke dalam list
-          for (var i = 0; i < list.length - 1; i++) {
-            arusList.add(list[i]['current']);
-            cosphiList.add(list[i]['cosphi']);
-          }
+          // list = dataValue.values.toList();
+          // // buat list untuk arus dan cosphi
+          // List<dynamic> arusList = [];
+          // List<dynamic> cosphiList = [];
+          // // tampung data arus ke dalam list
+          // for (var i = 0; i < list.length - 1; i++) {
+          //   arusList.add(list[i]['current']);
+          //   cosphiList.add(list[i]['cosphi']);
+          // }
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -181,6 +179,39 @@ class _MyWidgetState extends State<RecordDataPage> {
               endActionPane: ActionPane(
                 motion: const StretchMotion(),
                 children: [
+                  SlidableAction(
+                    borderRadius: BorderRadius.circular(8),
+                    backgroundColor: Colors.blueGrey,
+                    foregroundColor: Colors.white,
+                    icon: Icons.settings,
+                    onPressed: (contex) {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text('Change Device Name'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(),
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {},
+                                          child: Text('Save'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Cencel'),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ));
+                    },
+                  ),
                   SlidableAction(
                     borderRadius: BorderRadius.circular(8),
                     backgroundColor: Colors.red.shade400,
@@ -199,17 +230,18 @@ class _MyWidgetState extends State<RecordDataPage> {
                 ),
                 // route to Detail page
                 child: ListTile(
+                  onTap: () {
+                    _myBox.put(1, dataKey['key']);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DataSreen(),
+                      ),
+                    );
+                  },
                   trailing: InkWell(
                     splashColor: Colors.blue,
-                    onTap: () {
-                      _myBox.put(1, dataKey['key']);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DataSreen(),
-                        ),
-                      );
-                    },
+                    onTap: () {},
                     child: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white,

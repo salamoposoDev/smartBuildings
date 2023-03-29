@@ -1,12 +1,10 @@
-import 'dart:convert';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smartbuilding/component/monitor.dart';
-import 'package:smartbuilding/model/energy.dart';
 
 import '../bloc/database_bloc.dart';
 
+// ignore: must_be_immutable
 class TabRumah extends StatelessWidget {
   TabRumah({super.key});
 
@@ -37,7 +35,7 @@ class TabRumah extends StatelessWidget {
       child: BlocBuilder<DatabaseBloc, List>(
         builder: (context, state) {
           if (state.isEmpty) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           return GridView.builder(
               itemCount: sensorComponent.length,

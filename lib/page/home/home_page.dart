@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -9,12 +8,8 @@ import 'package:smartbuilding/component/sensors_card_status.dart';
 import 'package:smartbuilding/model/status_sensors.dart';
 import 'package:smartbuilding/page/history/history_page.dart';
 import 'package:smartbuilding/page/record_data/record_data_page.dart';
-import 'package:smartbuilding/tab_bar/tabbar_cakalang.dart';
-import 'package:smartbuilding/tab_bar/tabbar_kakap.dart';
 import 'package:smartbuilding/tab_bar/tabbar_rumah.dart';
 import 'package:smartbuilding/tab_bar/building1.dart';
-import 'package:smartbuilding/tab_bar/tabbar_tik.dart';
-import 'package:smartbuilding/tab_bar/tabbar_utama.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -327,7 +322,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(5.0),
                           child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: statusCard.length,
+                              itemCount: 2,
                               itemBuilder: (context, index) {
                                 return SensorsCardStatus(
                                   buildingsName: statusCard[index][0],
@@ -378,12 +373,23 @@ class _HomePageState extends State<HomePage> {
                             ));
                       },
                       child: const Text(
-                        'Record Data',
+                        'Classification',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Prediction',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -430,25 +436,27 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TabBar(
-                      indicator: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Colors.white60,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Colors.grey.shade400,
-                          width: 1,
-                        ),
-                      ),
+                      // indicator: BoxDecoration(
+                      //   shape: BoxShape.rectangle,
+                      //   color: Colors.white60,
+                      //   borderRadius: BorderRadius.circular(8),
+                      //   border: Border.all(
+                      //     color: Colors.grey.shade400,
+                      //     width: 1,
+                      //   ),
+                      // ),
                       isScrollable: true,
                       labelColor: Colors.grey[900],
                       unselectedLabelColor: Colors.grey,
                       indicatorColor: Colors.black,
                       tabs: const [
                         Tab(
-                          child: Text('Home'),
+                          text: 'Home',
+                          // child: Text('Home'),
                         ),
                         Tab(
-                          child: Text('Building 1'),
+                          text: 'Office',
+                          // child: Text('Office'),
                         ),
                       ],
                     ),
@@ -458,7 +466,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: TabBarView(children: [
                   TabRumah(),
-                  TabSalmon(),
+                  const TabSalmon(),
                 ]),
               )
             ],
